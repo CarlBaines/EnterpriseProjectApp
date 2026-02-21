@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Homepage</title>
+    <link rel="stylesheet" href="../styles/homepage.css" />
+    <script src="../scripts/script.js"></script>
+  </head>
+
+  <body>
+    <div class="fixed-bar-top">
+      <h1>Your Gardens</h1>
+      <button
+        class="notifications-btn"
+        aria-label="Notifications"
+        onclick="window.location.href = '../notifications.html'"
+      ></button>
+    </div>
+    <div class="fixed-bar-search">
+      <button class="sort-btn" aria-label="Sort"></button>
+      <input
+        type="text"
+        placeholder="Search..."
+        aria-label="Search"
+        class="search-input"
+      />
+      <p class="search-icon"></p>
+    </div>
+    <div class="app">
+      <p>hey there</p>
+      <button onclick="window.location.href = '../index.html'">
+        Back to Main Page
+      </button>
+
+      <div class="font-controls" aria-hidden="false">
+        <button id="decrease-font" aria-label="Small font">Small font</button>
+        <button id="reset-font" aria-label="Normal font">Normal font</button>
+        <button id="increase-font" aria-label="Large font">Large font</button>
+      </div>
+    </div>
+    <div class="fixed-bar-bottom">
+      <button
+        class="bottom-navbar-btn"
+        aria-label="Account"
+        onclick="window.location.href = '../account.html'"
+      ></button>
+      <button
+        class="bottom-navbar-btn"
+        aria-label="Add"
+        onclick="window.location.href = '../addgarden.html'"
+      ></button>
+      <button
+        class="bottom-navbar-btn"
+        aria-label="Settings"
+        onclick="window.location.href = '../settings.html'"
+      ></button>
+    </div>
+  </body>
+</html>

@@ -1,11 +1,18 @@
-'use strict';
+"use strict";
 const path = require("path");
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow } = require("electron");
 
 if (!app.isPackaged) {
-  require('electron-reload')(path.join(__dirname, '..'), {
-    electron: path.join(__dirname, '..', '..', 'node_modules', '.bin', 'electron.cmd'),
-    hardResetMethod: 'exit'
+  require("electron-reload")(path.join(__dirname, ".."), {
+    electron: path.join(
+      __dirname,
+      "..",
+      "..",
+      "node_modules",
+      ".bin",
+      "electron.cmd",
+    ),
+    hardResetMethod: "exit",
   });
 }
 
@@ -16,18 +23,19 @@ function createWindow() {
     resizable: false,
     maximizable: false,
     fullscreenable: false,
-    frame: false, 
+    frame: true,
     transparent: false,
     webPreferences: {
-      contextIsolation: true
-    }
+      contextIsolation: true,
+    },
   });
 
+  win.setMenu(null);
   win.loadFile(path.join(__dirname, "..", "index.html"));
   return win;
 }
 
-app.on('ready', () => {
+app.on("ready", () => {
   let mainWindow = createWindow();
 
   mainWindow.loadFile(path.join(__dirname, "..", "index.html"));
