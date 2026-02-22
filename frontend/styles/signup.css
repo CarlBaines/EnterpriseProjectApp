@@ -1,0 +1,82 @@
+:root {
+    --primary-color: #7ebc89;
+    --background-color: #f6f1de;
+    --text-color: #333;
+    --base-font-size: 16px;
+    --app-icon-size: 200px;
+}
+
+body {
+    background-color: var(--primary-color);
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: var(--base-font-size);
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container .logo {
+    width: var(--app-icon-size);
+    height: var(--app-icon-size);
+}
+
+.container h1 {
+    margin-top: -5px;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-weight: 900;
+}
+
+.input-container {
+    background-color: #FDF9EC;
+    padding: 24px 48px 24px 48px;
+    border-radius: 25px;
+}
+
+input {
+    border-radius: 20px;
+    color: var(--text-color);
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+#forgot-password-link {
+    text-decoration: underline;
+    font-size: 12px;
+}
+
+#sign-up-btn {
+    display: block;
+    margin: 0px auto;
+    background-color: #013220;
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    font-size: 14px;
+}
+
+#login-link {
+    text-decoration: underline;
+    color: #89CFF0;
+}
