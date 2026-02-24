@@ -13,7 +13,7 @@
       <button
         class="notifications-btn"
         aria-label="Notifications"
-        onclick="window.location.href = '../notifications.html'"
+        onclick="window.location.href = 'notifications.html'"
       ></button>
     </div>
     <div class="fixed-bar-search">
@@ -27,9 +27,16 @@
       <p class="search-icon"></p>
     </div>
     <div class="app">
-      <p>hey there</p>
-      <button onclick="window.location.href = '../index.html'">
-        Back to Main Page
+      <section id="garden-list" class="garden-list"></section>
+
+      <template id="garden-item-template">
+        <div class="garden-item">
+          <img src="" alt="Garden Image" class="garden-image" />
+          <h2 class="garden-name"></h2>
+        </div>
+      </template>
+      <button onclick="window.location.href = 'index.html'">
+        Back to Index Page
       </button>
 
       <div class="font-controls" aria-hidden="false">
@@ -42,17 +49,17 @@
       <button
         class="bottom-navbar-btn"
         aria-label="Account"
-        onclick="window.location.href = '../account.html'"
+        onclick="window.location.href = 'account.html'"
       ></button>
       <button
         class="bottom-navbar-btn"
         aria-label="Add"
-        onclick="window.location.href = '../addgarden.html'"
+        onclick="window.location.href = 'addgarden.html'"
       ></button>
       <button
         class="bottom-navbar-btn"
         aria-label="Settings"
-        onclick="window.location.href = '../settings.html'"
+        onclick="window.location.href = 'settings.html'"
       ></button>
     </div>
   </body>
