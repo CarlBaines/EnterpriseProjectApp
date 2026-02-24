@@ -3,17 +3,14 @@ const path = require("path");
 const { app, BrowserWindow } = require("electron");
 
 if (!app.isPackaged) {
-  require("electron-reload")(path.join(__dirname, ".."), {
-    electron: path.join(
-      __dirname,
-      "..",
-      "..",
-      "node_modules",
-      ".bin",
-      "electron.cmd",
-    ),
-    hardResetMethod: "exit",
-  });
+  try {
+    require("electron-reload")(path.join(__dirname, ".."), {
+      electron: process.execPath, // fixes "Provided electron executable cannot be found"
+      hardResetMethod: "exit",
+    });
+  } catch (err) {
+    console.warn("electron-reload disabled:", err.message);
+  }
 }
 
 function createWindow() {
@@ -31,14 +28,12 @@ function createWindow() {
   });
 
   win.setMenu(null);
-  win.loadFile(path.join(__dirname, "..", "index.html"));
+  win.loadFile(path.join(__dirname, "..", "pages", "index.html"));
   return win;
 }
 
 app.on("ready", () => {
-  let mainWindow = createWindow();
-
-  mainWindow.loadFile(path.join(__dirname, "..", "index.html"));
+  createWindow(); // (removed duplicate loadFile)
 });
 
 app.on("window-all-closed", () => {
