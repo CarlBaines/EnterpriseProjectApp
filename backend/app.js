@@ -14,11 +14,16 @@ app.get('/', (request, response) => {
     });
 });
 
+// Define routes
+const usersRoute = require('./routes/users');
+app.use('/users', usersRoute);
+
+// 404 handler
 app.use((request, response) => {
     response.status(404).json({
         message: "Endpoint not found"
     });
-})
+});
 
 app.listen(PORT, () => {
     console.log(`Backend server is running on http://localhost:${PORT}`);
