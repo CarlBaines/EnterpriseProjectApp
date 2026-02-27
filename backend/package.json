@@ -1,10 +1,12 @@
 {
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.6.2",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "nodemon": "^3.1.14"
   },
   "scripts": {
-    "devStart": "nodemon app.js"
+    "start": "nodemon app.js"
   }
 }

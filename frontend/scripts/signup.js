@@ -4,78 +4,118 @@ var passwordInput = document.getElementById('password');
 var confirmPasswordInput = document.getElementById('confirm-password');
 var signUpBtn = document.getElementById('sign-up-btn');
 
-// Load existing users from localStorage
-var signedUpUsers = JSON.parse(localStorage.getItem("signedUpUsers")) || [];
-
 // Functions
-function validateForm(){
+async function validateForm() {
     // Check if username is not empty
     var username = usernameInput.value.trim();
-    if(username === ''){
+    if (username === '') {
         alert('Username cannot be empty');
         return false;
     }
 
     // Check if username is at least 3 characters long
-    if(username.length < 3){
+    if (username.length < 3) {
         alert('Username must be at least 3 characters long');
         usernameInput.value = '';
         return false;
     }
 
     // Check if username doesnt already exist
-    var userExists = signedUpUsers.some(user => user.username === username);
-    console.log("User exists: " + userExists);
-    if(userExists){
-        alert("Username already exists");
-        usernameInput.value = '';
-        return false;
+    // var userExists = signedUpUsers.some(user => user.username === username);
+    // console.log("User exists: " + userExists);
+    // if(userExists){
+    //     alert("Username already exists");
+    //     usernameInput.value = '';
+    //     return false;
+    // }
+
+    try {
+        const response = await fetch('http://localhost:3000/users/usernamecheck', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            alert("Error occurred when checking username: " + data.message);
+            console.log("Error occurred during username check:", data.error);
+            return false;
+        }
+
+        if (data.exists) {
+            alert("Username already exists");
+            usernameInput.value = '';
+            return false;
+        }
+    }
+    catch (error) {
+        alert("A backend error occurred when checking username: " + error.message);
+        console.log("Backend error during username check:", error);
     }
 
     var password = passwordInput.value.trim();
     var confirmPassword = confirmPasswordInput.value.trim();
     // Check if password meets requirements
-    if(password === ''){
+    if (password === '') {
         alert('Password cannot be empty');
         passwordInput.value = '';
         return false;
     }
 
-    if(password.length < 12){
+    if (password.length < 12) {
         alert('Password must be at least 12 characters long');
         passwordInput.value = '';
         return false;
     }
 
     // Check if password and confirm password match
-    if(password !== confirmPassword){
+    if (password !== confirmPassword) {
         alert('Passwords do not match');
         passwordInput.value = '';
         confirmPasswordInput.value = '';
         return false;
     }
 
-    saveUser(username, password);
+    await saveUser(username, password);
 }
 
-function saveUser(username, password){
-    console.log("Saving user...");
-    // Very barebones (localStorage + zero hashing)
-    signedUpUsers.push({
-        username: username,
-        password: password
-    });
+async function saveUser(username, password) {
+    console.log("Username passed to saveUser function:", username);
+    console.log("Password passed to saveUser function:", password);
+    try {
+        const response = await fetch('http://localhost:3000/users/signup', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+        });
 
-    localStorage.setItem("signedUpUsers", JSON.stringify(signedUpUsers));
-    console.log("User saved: " + username);
+        const data = await response.json();
 
-    alert("User registered successfully!");
-    // Navigate user to login page after successful sign up
-    window.location.href = "login.html";
+        if (response.ok && data.success) {
+            alert("User Sign Up Successful!");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        alert("Error occurred during signup: " + data.message);
+        console.log("Error occurred during signup:", data.error);
+    }
+    catch (error) {
+        alert("A backend error occurred during signup: " + error.message);
+        console.log("Backend error during signup:", error);
+    }
 }
 
 // Event Listeners
-if(signUpBtn){
+if (signUpBtn) {
     signUpBtn.addEventListener('click', (event) => {
         event.preventDefault();
         validateForm();

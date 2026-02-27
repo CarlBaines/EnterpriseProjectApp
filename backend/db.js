@@ -10,7 +10,6 @@ db.exec(`
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL COLLATE NOCASE UNIQUE,
         password_hash TEXT NOT NULL,
-        email TEXT NOT NULL COLLATE NOCASE UNIQUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
     )   
 `);

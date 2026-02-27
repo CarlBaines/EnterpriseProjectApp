@@ -2,10 +2,12 @@
 const express = require('express');
 // Create an instance of the Express application
 const app = express();
+const cors = require('cors');
 // Port number for the server to listen on, defaulting to 3000 if not specified in environment variables
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); // Adds middleware to parse JSON request bodies
+app.use(cors());
 
 // Simple test routes
 app.get('/', (request, response) => {
