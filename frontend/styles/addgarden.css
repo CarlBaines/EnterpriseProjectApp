@@ -1,0 +1,172 @@
+:root {
+  --primary-color: #7ebc89;
+  --background-color: #f6f1de;
+  --text-color: #333;
+  --base-font-size: 16px;
+}
+
+body {
+  background-color: #f6f1de;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  font-size: var(--base-font-size);
+}
+
+.fixed-bar-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  padding: 0 16px;
+  z-index: 1000;
+  background-color: #7ebc89;
+  color: white;
+  align-items: center;
+}
+
+.fixed-bar-back {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  padding: 0 16px 0 64px;
+  z-index: 1000;
+  background-color: #f6f1de;
+  align-items: center;
+  border-top: #78967e 3px solid;
+}
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent url("../assets/images/back.png")
+    center/contain no-repeat;
+  cursor: pointer;
+  display: inline-block;
+  border: none;
+}
+
+.app {
+  padding: 16px;
+  padding-top: 130px;
+  padding-bottom: 60px;
+  align-items: center;
+  text-align: center;
+}
+
+.garden-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  background-color: #ffffff;
+  background-image: url("../assets/images/image-blank.png");
+  background-repeat: no-repeat;
+  background-position: calc(50% + 8px) 50%;
+  background-size: 120px;
+  border: 2px solid #d1dad2;
+  cursor: pointer;
+}
+
+.garden-name {
+  font-size: 1.5em;
+  font-weight: normal;
+  margin-bottom: 8px;
+  width: 95%;
+}
+
+.create-btn{
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    background-color: #7ebc89;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  margin-top: 120px;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+/* Modal Body */
+.modal-body {padding: 2px 16px;}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  animation-name: animatetop;
+  animation-duration: 0.4s
+}
+
+/* Add Animation */
+@keyframes animatetop {
+  from {top: -300px; opacity: 0}
+  to {top: 0; opacity: 1}
+}

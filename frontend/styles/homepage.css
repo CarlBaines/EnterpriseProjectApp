@@ -160,3 +160,42 @@ body {
     no-repeat;
   margin-right: 16px;
 }
+
+.garden-item {
+  display: grid;
+  grid-template-columns: 120px auto;
+  width: 99%;
+  text-align: center;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+/* Add a border around the garden item using a pseudo-element */
+.garden-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: #d1dad2 4px solid;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.garden-image {
+  height: 110px;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  border-radius: 23px;
+  position: relative;
+  z-index: 2;
+}
+
+.garden-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  
+}

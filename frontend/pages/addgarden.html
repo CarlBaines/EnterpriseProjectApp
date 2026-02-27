@@ -4,25 +4,92 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Garden</title>
-    <link rel="stylesheet" href="../addgarden.css" />
-    <script src="../addgarden.js" defer></script>
+    <link rel="stylesheet" href="../styles/addgarden.css" />
+    <script src="../scripts/addgarden.js" defer></script>
   </head>
+
   <body>
-    <h1>Add Garden</h1>
-    <button onclick="window.location.href = 'homepage.html'">
-      Back to Main Page
-    </button>
-    <body>
-    <form id="add-garden-form">
-      <label>
-        Garden name
-        <input id="garden-name" type="text" required />
-      </label>
-      <label>
-        Image URL
-        <input id="garden-image" type="url" placeholder="https://..." />
-      </label>
-      <button type="submit">Save garden</button>
-    </form>
+    <div class="fixed-bar-top">
+      <h1>Add Garden</h1>
+    </div>
+    <div class="fixed-bar-back">
+      <button class="back-btn" onclick="window.location.href = 'homepage.html'"></button>
+    </div>
+    <div class="app">
+      <form id="add-garden-form" onsubmit="saveGarden(event)">
+        <label>
+          <button class="garden-image" id="garden-image" type="button" onclick="selectImage()"></button>
+        </label>
+        <p style="font-weight: bold;">Preview Image</p>
+        <label>
+          <input class="garden-name" id="garden-name" type="text" placeholder="Name" required />
+        </label>
+        <button type="submit" class="create-btn">Save garden</button>
+      </form>
+    </div>
+
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2>Image URL</h2>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="image-url-input" placeholder="Enter image URL here" />
+      </div>
+    </div>
+
+</div>
   </body>
-  </body>
+  <script>
+    function saveGarden(event) {
+      if (event) {
+        event.preventDefault();
+      }
+
+      const nameInput = document.getElementById("garden-name");
+      const imageInput = document.getElementById("image-url-input");
+
+      if (!nameInput.value) {
+        alert("Please enter a name for your garden.");
+        return;
+      }
+
+      if(!imageInput.value) {
+        alert("Please enter an image URL for your garden.");
+        return;
+      }
+
+      const newGarden = {
+        name: nameInput.value,
+        image: imageInput.value,
+      };
+
+      let gardens = JSON.parse(localStorage.getItem("gardens")) || [];
+      gardens.push(newGarden);
+      localStorage.setItem("gardens", JSON.stringify(gardens));
+
+      // Redirect to homepage after saving
+      window.location.href = "homepage.html";
+    }
+
+    function selectImage() {
+      var modal = document.getElementById("myModal");
+      var btn = document.getElementById("garden-image");
+      var span = document.getElementsByClassName("close")[0];
+      btn.onclick = function() {
+        modal.style.display = "block";
+      }
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+    }
+  </script>
+</html>
