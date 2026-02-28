@@ -12,10 +12,11 @@ body {
     margin: 0;
     padding: 0;
     font-size: var(--base-font-size);
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
-.container {
+.container,
+#recovery-key-modal {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -36,7 +37,8 @@ body {
     font-weight: 900;
 }
 
-.input-container {
+.input-container,
+.modal-content {
     background-color: #FDF9EC;
     padding: 24px 48px 24px 48px;
     border-radius: 25px;
@@ -56,7 +58,8 @@ input {
     font-size: 12px;
 }
 
-#sign-up-btn {
+#sign-up-btn,
+#continue-btn {
     display: block;
     margin: 0px auto;
     background-color: #013220;
@@ -80,3 +83,30 @@ input {
     text-decoration: underline;
     color: #89CFF0;
 }
+
+.modal-content h1{
+    color: black;
+    text-shadow: none;
+    font-weight: 700;
+    text-align: center;
+}
+
+#recovery-key-modal{
+    display: none;
+}
+
+.recovery-key-container p{
+    text-align: center;
+}
+
+#recovery-key-modal .modal-content img.logo {
+  width: var(--app-icon-size);
+  display: block;
+  margin: 0 auto 16px;
+}
+
+#recovery-key{
+    font-weight: 600;
+}
+
+

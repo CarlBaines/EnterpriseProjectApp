@@ -5,6 +5,8 @@ const router = express.Router();
 const db = require('../db');
 // Import bcrypt for password hashing
 const bcrypt = require('bcrypt');
+// Import crypto for recovery key generation
+const crypto = require('crypto');
 
 function routeHealthCheck(routeName){
     return (request, response) => {
@@ -27,6 +29,7 @@ function routeHealthCheck(routeName){
 router.get('/login', routeHealthCheck('login'));
 router.get('/usernamecheck', routeHealthCheck('usernamecheck'));
 router.get('/signup', routeHealthCheck('signup'));
+router.get('/recoverykey', routeHealthCheck('recoverykey'));
 router.get('/forgotpassword', routeHealthCheck('forgotpassword'));
 router.get('/logout', routeHealthCheck('logout'));
 
@@ -36,6 +39,7 @@ router.get('/', (request, response) => {
     })
 });
 
+// /all route to retrieve all users in the database (for testing purposes, not for production use)
 router.get('/all', (request, response) => {
     const selectSql = db.prepare(`SELECT * FROM users`);
     try{
@@ -58,15 +62,56 @@ router.get('/all', (request, response) => {
     }
 });
 
-// router.post('/login', (request, response) => {
-//     const { username , password } = request.body;
-//     if(!username || !password){
-//         return response.status(400).json({
-//             success: false,
-//             message: "Username and password are required for login."
-//         });
-//     }
-// });
+/*
+    POST routes for login, signup, username check, forgot password, logout
+*/
+
+router.post('/login', (request, response) => {
+    const { username , password } = request.body;
+    if(!username || !password){
+        return response.status(400).json({
+            success: false,
+            message: "Username and password are required for login."
+        });
+    }
+
+    // Check if the user exists in the database
+    const selectUser = db.prepare(`SELECT * FROM users WHERE username = ?`);
+    try{
+        const user = selectUser.get(username);
+        if(!user){
+            return response.status(401).json({
+                exists: false,
+                message: "Username not found!"
+            });
+        }
+    }
+    catch(err){
+        return response.status(500).json({
+            exists: false,
+            message: "Error occurred when checking for existing username.",
+            error: err.message
+        });
+    }
+
+    // If user exists, compare the provided password with the stored password hash
+    const user = selectUser.get(username);
+    const hashedPassword = user.password_hash;
+    const passwordMatch = bcrypt.compareSync(password, hashedPassword);
+
+    if(!passwordMatch){
+        return response.status(401).json({
+            exists: false,
+            message: "Invalid password!"
+        });
+    }
+
+    // Maybe could implement session management later.
+    return response.status(200).json({
+        exists: true,
+        message: "User Login Successful!"
+    });
+});
 
 router.post('/signup', (request, response) => {
     const { username, password } = request.body;
@@ -143,6 +188,51 @@ router.post('/usernamecheck', (request, response) => {
             message: "Error occurred when checking for existing username.",
             error: err.message
         })
+    }
+});
+
+// Route which posts a recovery key to the database for a user
+router.post('/recoverykey', (request, response) => {
+
+    const { username } = request.body;
+    if(!username){
+        return response.status(400).json({
+            success: false,
+            message: "Username is required to generate and store recovery key."
+        });
+    }
+
+    // Generate a 25-character random recovery key
+    const LENGTH = 25;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    const bytes = crypto.randomBytes(LENGTH);
+    const recoveryKey = Array.from(bytes).map(byte => chars[byte % chars.length]).join('');
+    // REMOVE THIS IN PRODUCTION FOR SECURITY PURPOSES
+    // console.log("Generated recovery key:", recoveryKey);
+
+    const postRecoveryKey = db.prepare(`UPDATE users SET recovery_key = ? WHERE username = ?`);
+    try{
+        const updatedUser = postRecoveryKey.run(recoveryKey, username);
+        // If changes is 0, then no user was found with the provided username to update the recovery key for.
+        if(updatedUser.changes === 0){
+            return response.status(404).json({
+                success: false,
+                message: "Username not found to store recovery key."
+            });
+        }
+        return response.status(200).json({
+            success: true,
+            message: "Recovery key generated and stored successfully!",
+            recoveryKey: recoveryKey
+        })
+    }
+    catch(err){
+        return response.status(500).json({
+            success: false,
+            message: "Error occurred when attempting to store recovery key in the database.",
+            error: err.message
+        });
     }
 });
 

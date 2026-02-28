@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id = "sign-up-container">
         <img src="../assets/images/temp_app_logo.png" alt="temp_logo" class="logo">
         <h1>Sign Up</h1>
         <div class="input-container">
@@ -28,7 +28,24 @@
         </div>
         <div class="login-container">
             <p>Already have an account?</p>
-            <a href = "login.html"><p id="login-link">Login</p></a>
+            <a href="login.html">
+                <p id="login-link">Login</p>
+            </a>
+        </div>  
+    </div>
+    <!--Modal which displays recovery key-->
+    <div id="recovery-key-modal" class="modal">
+        <div class="modal-content">
+            <img src="../assets/images/temp_app_logo.png" alt="temp-logo" class="logo">
+            <h1>Recovery Key</h1>
+            <div class="recovery-key-container">
+                <p>The recovery key is a code which can be used to unlock your account if you forget your password.
+                    <br><b>Make a copy of this code and store it in a safe place.
+                </p><b>
+                    <p id="recovery-key">Recovery Key:</p>
+                    <button type="submit" id="continue-btn">Continue</button>
+                    <!--Could potentially add a copy button that allows the user to copy the recovery key to their clipboard-->
+            </div>
         </div>
     </div>
 </body>

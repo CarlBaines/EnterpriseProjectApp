@@ -1,8 +1,12 @@
 // DOM elements
+var signUpContainer = document.getElementById('sign-up-container')
 var usernameInput = document.getElementById('username');
 var passwordInput = document.getElementById('password');
 var confirmPasswordInput = document.getElementById('confirm-password');
 var signUpBtn = document.getElementById('sign-up-btn');
+var recoveryKeyModal = document.getElementById('recovery-key-modal');
+var recoveryKeyDisplay = document.getElementById('recovery-key');
+var continueBtn = document.getElementById('continue-btn');
 
 // Functions
 async function validateForm() {
@@ -19,15 +23,6 @@ async function validateForm() {
         usernameInput.value = '';
         return false;
     }
-
-    // Check if username doesnt already exist
-    // var userExists = signedUpUsers.some(user => user.username === username);
-    // console.log("User exists: " + userExists);
-    // if(userExists){
-    //     alert("Username already exists");
-    //     usernameInput.value = '';
-    //     return false;
-    // }
 
     try {
         const response = await fetch('http://localhost:3000/users/usernamecheck', {
@@ -101,7 +96,8 @@ async function saveUser(username, password) {
 
         if (response.ok && data.success) {
             alert("User Sign Up Successful!");
-            window.location.href = 'login.html';
+            await displayRecoveryKeyModal(username);
+            // window.location.href = 'login.html';
             return;
         }
 
@@ -114,10 +110,48 @@ async function saveUser(username, password) {
     }
 }
 
+async function displayRecoveryKeyModal(username){
+    console.log("Attempting to fetch recovery key for username:", username);
+    // Fetch the recovery key from the backend and display it in the modal
+    try{
+        const response = await fetch('http://localhost:3000/users/recoverykey', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username: username })
+        });
+
+        const data = await response.json();
+        if(response.ok && data.success){
+            // Add the recovery key to the modal content
+            recoveryKeyDisplay.textContent = data.recoveryKey;
+            // Hide the sign up container
+            signUpContainer.style.display = 'none';
+            // Display the recovery key modal
+            recoveryKeyModal.style.display = 'flex';
+            return;
+        }    
+
+        alert("Error occurred when fetching recovery key: " + data.message);
+        console.log("Error occurred when fetching recovery key:", data.error);
+    }
+    catch(error){
+        alert("A backend error occurred when fetching recovery key: " + error.message);
+        console.log("Backend error when fetching recovery key:", error);
+    }
+}
+
 // Event Listeners
 if (signUpBtn) {
     signUpBtn.addEventListener('click', (event) => {
         event.preventDefault();
         validateForm();
+    })
+}
+
+if(continueBtn){
+    continueBtn.addEventListener('click', () => {
+        window.location.href = 'login.html';
     })
 }

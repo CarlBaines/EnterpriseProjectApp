@@ -10,21 +10,13 @@ db.exec(`
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL COLLATE NOCASE UNIQUE,
         password_hash TEXT NOT NULL,
+        recovery_key TEXT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
     )   
 `);
 
 // Drop users table if needed
 // db.exec(`DROP TABLE users`);
-
-// Inserts a test user
-// const insertTestUser = db.prepare(`INSERT INTO users
-//     (username, password_hash, email)
-//     VALUES
-//     ('testuser', 'hashedpassword123', 'test@gmail.com')    
-// `);
-// insertTestUser.run();
-
 
 const selectUsers = db.prepare(`SELECT * FROM users`).all();
 console.log("Current users in the database:", selectUsers);
