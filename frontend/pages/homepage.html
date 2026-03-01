@@ -36,9 +36,50 @@
           <img src="" alt="Garden Image" class="garden-image" />
           <!-- Garden name -->
           <h2 class="garden-name"></h2>
-
+          <!-- Edit and delete buttons -->
+          <div class="garden-actions">
+            <button
+              class="edit-btn"
+              aria-label="Edit"
+              onclick="editGarden(this.closest('.garden-item').dataset.id)"
+            ></button>
+            <button
+              class="delete-btn"
+              aria-label="Delete"
+              onclick="deleteGarden(this.closest('.garden-item').dataset.id)"
+            ></button>
+          </div>
         </div>
       </template>
+    </div>
+
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h2>Edit Garden</h2>
+        </div>
+        <div class="modal-body">
+          <input
+            class="image-url-input"
+            type="text"
+            id="image-url-input"
+            placeholder="Enter image URL here"
+          />
+          <input
+            class="garden-name-input"
+            type="text"
+            id="garden-name-input"
+            placeholder="Enter garden name here"
+          />
+        </div>
+        <div class="modal-footer">
+          <button id="save-image-btn">Save</button>
+        </div>
+      </div>
+    </div>
+
     <div class="fixed-bar-bottom">
       <button
         class="bottom-navbar-btn"
