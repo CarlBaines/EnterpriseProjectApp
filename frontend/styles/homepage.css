@@ -314,3 +314,27 @@ body {
     opacity: 1;
   }
 }
+
+.modal-garden-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  background-color: #ffffff;
+  background-image: url("../assets/images/image-blank.png");
+  background-repeat: no-repeat;
+  background-position: calc(50% + 8px) 50%;
+  background-size: 120px;
+  border: 2px solid #d1dad2;
+  cursor: pointer;
+  color: transparent;
+  text-shadow: none;
+}
+
+.garden-image::file-selector-button {
+  display: none;
+}
+
+.garden-image::-webkit-file-upload-button {
+  display: none;
+}

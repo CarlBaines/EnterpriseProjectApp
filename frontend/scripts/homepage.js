@@ -73,7 +73,7 @@
       gardens.find((garden) => String(garden.id) === String(gardenId)) ||
       gardens[Number(gardenIndex)];
 
-    const imageInput = document.getElementById("image-url-input");
+    const imageInput = document.getElementById("garden-image");
     const nameInput = document.getElementById("garden-name-input");
 
     imageInput.value = selectedGarden?.image || selectedGarden?.imageUrl || "";
@@ -91,9 +91,9 @@
     };
   }
 
-  function saveEditedGarden() {
+  async function saveEditedGarden() {
     const gardens = JSON.parse(localStorage.getItem(GARDEN_KEY)) || [];
-    const imageInput = document.getElementById("image-url-input");
+    const imageInput = document.getElementById("garden-image");
     const nameInput = document.getElementById("garden-name-input");
     const modal = document.getElementById("myModal");
 
@@ -106,10 +106,12 @@
       return;
     }
 
+    dataUrl = imageInput.files[0] ? await fileToDataUrl(imageInput.files[0]) : imageInput.value.trim();
+
     const existingGarden = gardens[targetIndex] || {};
     gardens[targetIndex] = {
       ...existingGarden,
-      image: imageInput.value.trim(),
+      image: dataUrl,
       name: nameInput.value.trim(),
     };
 
@@ -128,7 +130,7 @@
   function editGarden(gardenId, gardenIndex) {
     openEditModal(gardenId, gardenIndex);
   }
-  // Event delegation for delete buttons
+  // Event delegation for edit buttons
   document.addEventListener("click", (event) => {
     if (event.target.classList.contains("edit-btn")) {
       const gardenItem = event.target.closest(".garden-item");
@@ -137,4 +139,18 @@
       editGarden(gardenId, gardenIndex);
     }
   });
+
+  async function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+        if (!(file instanceof File)) {
+            reject(new Error("Input must be a File object"));
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result); // Data URL result
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+    });
+  }
 })();

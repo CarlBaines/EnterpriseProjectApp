@@ -61,12 +61,7 @@
           <h2>Edit Garden</h2>
         </div>
         <div class="modal-body">
-          <input
-            class="image-url-input"
-            type="text"
-            id="image-url-input"
-            placeholder="Enter image URL here"
-          />
+          <input type="file" accept=".jpg, .png, image/*" id="garden-image" class="modal-garden-image" />
           <input
             class="garden-name-input"
             type="text"
@@ -98,4 +93,17 @@
       ></button>
     </div>
   </body>
+  <script>
+    document.addEventListener("click", (e) => {
+      const editBtn = e.target.closest(".edit-btn");
+      if (!editBtn) return;
+
+      e.preventDefault();
+
+      const modal = document.getElementById("myModal");
+      if (!modal) return;
+
+      modal.style.display = "block";
+    });
+  </script>
 </html>
