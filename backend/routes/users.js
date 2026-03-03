@@ -28,6 +28,7 @@ function routeHealthCheck(routeName){
 // GET routes for testing
 router.get('/login', routeHealthCheck('login'));
 router.get('/usernamecheck', routeHealthCheck('usernamecheck'));
+router.get('/forgotpasswordusernamecheck', routeHealthCheck('forgotpasswordusernamecheck'));
 router.get('/signup', routeHealthCheck('signup'));
 router.get('/recoverykey', routeHealthCheck('recoverykey'));
 router.get('/forgotpassword', routeHealthCheck('forgotpassword'));
@@ -164,7 +165,7 @@ router.post('/usernamecheck', (request, response) => {
     const { username } = request.body;
     if(!username){
         return response.status(404).json({
-            success: false,
+            exists: false,
             message: "Username is required for username check."
         });
     }
@@ -191,12 +192,46 @@ router.post('/usernamecheck', (request, response) => {
     }
 });
 
+router.post('/forgotpasswordusernamecheck', (request, response) => {
+    const { username } = request.body;
+    if(!username){
+        return response.status(404).json({
+            exists: false,
+            message: "Username is required for forgot password username check."
+        });
+    }
+
+    const fpUsernameCheck = db.prepare(`SELECT * FROM users WHERE username = ?`);
+    try{
+        const existingUser = fpUsernameCheck.get(username);
+        if(existingUser){
+            return response.status(200).json({
+                exists: true,
+                message: "Username is valid for forgot password!"
+            });
+        }
+        else{
+            return response.status(404).json({
+                exists: false,
+                message: "Username not found for forgot password."
+            });
+        }
+    }
+    catch(err){
+        return response.status(500).json({
+            exists: false,
+            message: "Error occurred when checking for existing username for forgot password.",
+            error: err.message
+        });
+    }
+})
+
 // Route which posts a recovery key to the database for a user
 router.post('/recoverykey', (request, response) => {
 
     const { username } = request.body;
     if(!username){
-        return response.status(400).json({
+        return response.status(404).json({
             success: false,
             message: "Username is required to generate and store recovery key."
         });
@@ -233,6 +268,104 @@ router.post('/recoverykey', (request, response) => {
             message: "Error occurred when attempting to store recovery key in the database.",
             error: err.message
         });
+    }
+});
+
+router.post('/recoverykeycheck', (request, response) => {
+    const { username, recoveryKey } = request.body;
+    if(!username || !recoveryKey){
+        return response.status(404).json({
+            valid: false,
+            message: "Username and recovery key are required for recovery key check."
+        })
+    }
+
+    const recoveryKeyCheck = db.prepare(`SELECT * FROM users WHERE username = ? AND recovery_key = ?`);
+    try{
+        const recoveryKeyValid = recoveryKeyCheck.get(username, recoveryKey);
+        if(recoveryKeyValid){
+            return response.status(200).json({
+                valid: true,
+                message: "Recovery key is valid!"
+            });
+        }
+        else{
+            return response.status(404).json({
+                valid: false,
+                message: "Invalid recovery key or username."
+            })
+        }
+    }
+    catch(err){
+        return response.status(500).json({
+            valid: false,
+            message: "Error occurred when checking recovery key in the database.",
+            error: err.message
+        });
+    }
+});
+
+router.post('/forgotpassword', (request, response) => {
+    const { username, confirmPassword } = request.body;
+    if(!username || !confirmPassword){
+        return response.status(404).json({
+            success: false,
+            message: "Confirmed new password is required to reset password."
+        });
+    }
+
+    // Fetch the current password hash of the user first
+    const selectUser = db.prepare(`SELECT password_hash FROM users WHERE username = ?`);
+    let user;
+    try{
+        user = selectUser.get(username);
+        if(!user){
+            return response.status(404).json({
+                success: false,
+                message: "Username not found to reset password for."
+            });
+        }
+    }
+    catch(err){
+        return response.status(500).json({
+            success: false,
+            message: "Error occurred when checking for existing username to reset password for.",
+            error: err.message
+        });
+    }
+
+    const passwordMatch = bcrypt.compareSync(confirmPassword, user.password_hash);
+    if(passwordMatch){
+        return response.status(400).json({
+            success: false,
+            message: "New password cannot be the same as the old password. Please enter a different new password."
+        });
+    }
+
+    const salt = bcrypt.genSaltSync(13);
+    const passwordHash = bcrypt.hashSync(confirmPassword, salt);
+
+    // recovery_key = NULL
+    const updatePassword = db.prepare(`UPDATE users SET password_hash = ? WHERE username = ?`);
+    try{
+        const updatedUser = updatePassword.run(passwordHash, username);
+        if(updatedUser.changes === 0){
+            return response.status(404).json({
+                success: false,
+                message: "Username not found to reset password for."
+            });
+        }
+        return response.status(200).json({
+            success: true,
+            message: "Password reset successful!"
+        });
+    }
+    catch(err){
+        return response.status(500).json({
+            success: false,
+            message: "Error occurred when attempting to reset password in the database.",
+            error: err.message
+        })
     }
 });
 
