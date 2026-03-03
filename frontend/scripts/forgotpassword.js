@@ -111,8 +111,9 @@ async function submitNewPassword() {
     const data = await response.json();
 
     if(response.ok && data.success){
+        window.location.href = "./login.html";
         alert("Password reset successful! You can now log in with your new password.");
-        window.location.href = 'login.html';
+        // window.location.replace('./login.html');
     } else {
         alert("An error occurred while resetting your password. Please try again.");
         newPasswordInput.value = '';
