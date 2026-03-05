@@ -1,4 +1,5 @@
 // DOM elements
+const forgotPasswordContainer = document.querySelector('.container');
 const usernameInput = document.getElementById('username');
 const initiateResetBtn = document.getElementById('initiate-reset-btn');
 const recoveryKeyLabel = document.getElementById('recovery-key-label');
@@ -8,13 +9,21 @@ const newPasswordInput = document.getElementById('new-password');
 const confirmNewPasswordLabel = document.getElementById('confirm-new-password-label');
 const confirmNewPasswordInput = document.getElementById('confirm-new-password');
 
+var dynamicModal = document.getElementById('dynamic-modal');
+var dynamicModalTitle = document.getElementById('dynamic-modal-title');
+var dynamicModalMessage = document.getElementById('dynamic-modal-message');
+var dynamicModalBtn = document.getElementById('dm-nav-btn');
+
 let buttonState = 'username';
+let modalState = null;
 
 async function promptRecoveryKeyInput() {
 
     var username = usernameInput.value.trim();
     if (username === '') {
-        alert('Username cannot be empty. Please enter your username to reset your password.');
+        // alert('Username cannot be empty. Please enter your username to reset your password.');
+        modalState = 'u1';
+        await determineModalContent(modalState);
         return;
     }
 
@@ -39,8 +48,9 @@ async function promptRecoveryKeyInput() {
         return true;
     }
     else {
-        alert("Username does not exist. Please enter a valid username.");
-        usernameInput.value = '';
+        // alert("Username does not exist. Please enter a valid username.");
+        modalState = 'u2';
+        await determineModalContent(modalState);
         return false;
     }
 }
@@ -50,7 +60,9 @@ async function submitRecoveryKey() {
     var recoveryKey = recoveryKeyInput.value.trim();
 
     if (username === '' || recoveryKey === '') {
-        alert('Username and recovery key cannot be empty. Please enter both fields to reset your password.');
+        // alert('Username and recovery key cannot be empty. Please enter both fields to reset your password.');
+        modalState = 'rk1';
+        await determineModalContent(modalState);
         return;
     }
 
@@ -69,7 +81,9 @@ async function submitRecoveryKey() {
 
     if (response.ok && data.valid) {
         // Display change password and confirm password input fields.
-        alert("Recovery key is valid! You can now reset your password.");
+        // alert("Recovery key is valid! You can now reset your password.");
+        modalState = 'rkvalid';
+        await determineModalContent(modalState);
         newPasswordLabel.style.display = 'block';
         newPasswordInput.style.display = 'block';
         confirmNewPasswordLabel.style.display = 'block';
@@ -80,8 +94,9 @@ async function submitRecoveryKey() {
         recoveryKeyInput.disabled = true;
     }
     else {
-        alert("Invalid recovery key. Please check your recovery key and try again.");
-        recoveryKeyInput.value = '';
+        // alert("Invalid recovery key. Please check your recovery key and try again.");
+        modalState = 'rkinvalid';
+        await determineModalContent(modalState);
     }
 }
 
@@ -91,12 +106,16 @@ async function submitNewPassword() {
     var confirmPassword = confirmNewPasswordInput.value.trim();
 
     if(password === '' || confirmPassword === ''){
-        alert("Password fields cannot be empty. Please enter and confirm your new password.");
+        // alert("Password fields cannot be empty. Please enter and confirm your new password.");
+        modalState = 'np1';
+        await determineModalContent(modalState);
         return;
     }
 
     if(password !== confirmPassword){
-        alert("Passwords do not match. Please ensure both password fields match.");
+        // alert("Passwords do not match. Please ensure both password fields match.");
+        modalState = 'np2';
+        await determineModalContent(modalState);
         return;
     }
 
@@ -111,16 +130,113 @@ async function submitNewPassword() {
     const data = await response.json();
 
     if(response.ok && data.success){
-        window.location.href = "./login.html";
-        alert("Password reset successful! You can now log in with your new password.");
-        // window.location.replace('./login.html');
+        // alert("Password reset successful! You can now log in with your new password.");
+        modalState = 'npvalid';
+        await determineModalContent(modalState);
     } else {
-        alert("An error occurred while resetting your password. Please try again.");
-        newPasswordInput.value = '';
-        confirmNewPasswordInput.value = '';
+        // alert("An error occurred while resetting your password. Please try again.");
+        modalState = 'npinvalid';
+        await determineModalContent(modalState);    
     }
 }
 
+async function determineModalContent(description){
+    forgotPasswordContainer.style.display = "none";
+    dynamicModal.style.display = "flex";
+    dynamicModalBtn.onclick = null;
+    switch(description){
+        case 'u1':
+            dynamicModalTitle.textContent = "Username Required";
+            dynamicModalMessage.textContent = "Please enter your username to reset your password.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                usernameInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+        case 'u2':
+            dynamicModalTitle.textContent = "Username Not Found";
+            dynamicModalMessage.textContent = "The username you entered does not exist. Please enter a valid username.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                usernameInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+        case 'rk1':
+            dynamicModalTitle.textContent = "Recovery Key Required";
+            dynamicModalMessage.textContent = "Please enter your recovery key to reset your password.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                recoveryKeyInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+        case 'rkvalid':
+            dynamicModalTitle.textContent = "Recovery Key Validated";
+            dynamicModalMessage.textContent = "Your recovery key was valid! Please enter and confirm your new password.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                forgotPasswordContainer.style.display = "flex";
+            };  
+            break;
+        case 'rkinvalid':
+            dynamicModalTitle.textContent = "Invalid Recovery Key";
+            dynamicModalMessage.textContent = "The recovery key you entered is invalid! Please check your recovery key and try again.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                recoveryKeyInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+        case 'np1':
+            dynamicModalTitle.textContent = "Password Required";
+            dynamicModalMessage.textContent = "Password fields cannot be empty! Please enter and confirm your new password.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                newPasswordInput.value = '';
+                confirmNewPasswordInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+        case 'np2':
+            dynamicModalTitle.textContent = "Password Mismatch";
+            dynamicModalMessage.textContent = "Passwords do not match! Please ensure both password fields match.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                newPasswordInput.value = '';
+                confirmNewPasswordInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+        case 'npvalid':
+            dynamicModalTitle.textContent = "Password Reset Successful";
+            dynamicModalMessage.textContent = "Your password has been reset successfully! You can now log in with your new password.";
+            dynamicModalBtn.textContent = "Go to Login";
+            dynamicModalBtn.onclick = () => {
+                window.location.href = "login.html";
+            };
+            break;
+        case 'npinvalid':
+            dynamicModalTitle.textContent = "Password Reset Failed";
+            dynamicModalMessage.textContent = "An error occurred while resetting your password! Please try again.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                newPasswordInput.value = '';
+                confirmNewPasswordInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+    }
+}
 
 if (initiateResetBtn) {
     initiateResetBtn.addEventListener('click', async (event) => {

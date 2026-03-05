@@ -12,7 +12,7 @@ body {
     margin: 0;
     padding: 0;
     font-size: var(--base-font-size);
-    overflow-y: scroll;
+    overflow: hidden; /* scroll */
 }
 
 .container,
@@ -59,7 +59,8 @@ input {
 }
 
 #sign-up-btn,
-#continue-btn {
+#continue-btn,
+#dm-nav-btn {
     display: block;
     margin: 0px auto;
     background-color: #013220;
@@ -107,6 +108,41 @@ input {
 
 #recovery-key{
     font-weight: 600;
+}
+
+#dynamic-modal{
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+#dynamic-modal .dynamic-modal-content{
+    background-color: #FDF9EC;
+    padding: 24px 48px 24px 48px;
+    border-radius: 25px;
+}
+
+#dynamic-modal .dynamic-modal-content img.logo{
+    width: var(--app-icon-size);
+    display: block;
+    margin: 0 auto 16px;
+}
+
+#dynamic-modal-title{
+    color: black;
+    text-shadow: none;
+    font-weight: 700;
+    text-align: center;
+}
+
+#dynamic-modal-message{
+    color: black;
+    font-weight: 400;
+    text-align: center;
 }
 
 
