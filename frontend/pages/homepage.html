@@ -23,6 +23,7 @@
         placeholder="Search..."
         aria-label="Search"
         class="search-input"
+        id="search-input"
       />
       <p class="search-icon"></p>
     </div>
@@ -41,12 +42,10 @@
             <button
               class="edit-btn"
               aria-label="Edit"
-              onclick="editGarden(this.closest('.garden-item').dataset.id)"
             ></button>
             <button
               class="delete-btn"
               aria-label="Delete"
-              onclick="deleteGarden(this.closest('.garden-item').dataset.id)"
             ></button>
           </div>
         </div>
@@ -75,6 +74,21 @@
       </div>
     </div>
 
+    <div id="sort-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h2>Sort Gardens</h2>
+        </div>
+        <div class="modal-body">
+          <button id="sort-name-asc-btn">Name Ascending</button>
+          <button id="sort-name-desc-btn">Name Descending</button>
+          <button id="sort-date-newest-btn">Date Created (Newest)</button>
+          <button id="sort-date-oldest-btn">Date Created (Oldest)</button>
+        </div>
+      </div>
+    </div>
+
     <div class="fixed-bar-bottom">
       <button
         class="bottom-navbar-btn"
@@ -93,17 +107,4 @@
       ></button>
     </div>
   </body>
-  <script>
-    document.addEventListener("click", (e) => {
-      const editBtn = e.target.closest(".edit-btn");
-      if (!editBtn) return;
-
-      e.preventDefault();
-
-      const modal = document.getElementById("myModal");
-      if (!modal) return;
-
-      modal.style.display = "block";
-    });
-  </script>
 </html>
