@@ -68,11 +68,34 @@ router.get('/all', (request, response) => {
 */
 
 router.post('/login', (request, response) => {
-    const { username , password } = request.body;
+    let { username , password } = request.body;
+    username = username.trim();
+
     if(!username || !password){
         return response.status(400).json({
             success: false,
             message: "Username and password are required for login."
+        });
+    }
+
+    if(typeof username !== 'string' || typeof password !== 'string'){
+        return response.status(400).json({
+            success: false,
+            message: "Username and password must be strings."
+        });
+    }
+
+    if(username.length < 3 || username.length > 32){
+        return response.status(400).json({
+            success: false,
+            message: "Username must be between 3 characters and 32 characters long."
+        });
+    }
+
+    if(password.length < 12 || password.length > 64){
+        return response.status(400).json({
+            success: false,
+            message: "Password must be between 12 characters and 64 characters long."
         });
     }
 
@@ -115,13 +138,37 @@ router.post('/login', (request, response) => {
 });
 
 router.post('/signup', (request, response) => {
-    const { username, password } = request.body;
+    let { username, password } = request.body;
+    username = username.trim();
+    
     if(!username || !password){
         return response.status(400).json({
             success: false,
             message: "Username and password are required for signup."
         });
     }
+
+    if(typeof username !== 'string' || typeof password !== 'string'){
+        return response.status(400).json({
+            success: false,
+            message: "Username and password must be strings."
+        });
+    }
+
+    if(username.length < 3 || username.length > 32){
+        return response.status(400).json({
+            success: false,
+            message: "Username must be between 3 characters and 32 characters long."
+        });
+    }
+
+    if(password.length < 12 || password.length > 64){
+        return response.status(400).json({
+            success: false,
+            message: "Password must be between 12 characters and 64 characters long."
+        });
+    }
+
     const usernameCheck = db.prepare(`SELECT * FROM users WHERE username = ?`)
     try{
         const existingUser = usernameCheck.get(username);
@@ -176,7 +223,7 @@ router.post('/usernamecheck', (request, response) => {
             return response.status(409).json({
                 exists: true,
                 message: "Username already exists!"
-            })
+            });
         }
         return response.status(200).json({
             exists: false,
@@ -193,12 +240,27 @@ router.post('/usernamecheck', (request, response) => {
 });
 
 router.post('/forgotpasswordusernamecheck', (request, response) => {
-    const { username } = request.body;
+    let { username } = request.body;
+    username = username.trim();
     if(!username){
         return response.status(404).json({
             exists: false,
             message: "Username is required for forgot password username check."
         });
+    }
+
+    if(typeof username !== 'string'){
+        return response.status(400).json({
+            exists: false,
+            message: "Username must be a string for forgot password username check."
+        });
+    }
+
+    if(username.length < 3 || username.length > 32){
+        return response.status(400).json({
+            exists: false,
+            message: "Username must be between 3 characters and 32 characters long for forgot password username check."
+        })
     }
 
     const fpUsernameCheck = db.prepare(`SELECT * FROM users WHERE username = ?`);
@@ -365,7 +427,7 @@ router.post('/forgotpassword', (request, response) => {
             success: false,
             message: "Error occurred when attempting to reset password in the database.",
             error: err.message
-        })
+        });
     }
 });
 

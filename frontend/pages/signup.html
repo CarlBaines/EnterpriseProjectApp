@@ -15,13 +15,13 @@
         <div class="input-container">
             <form>
                 <label for="username">Enter username</label><br>
-                <input type="text" id="username" name="username"><br>
+                <input type="text" id="username" name="username" required minlength="3" maxlength="32"><br>
                 <br>
                 <label for="password">Enter password</label><br>
-                <input type="password" id="password" name="password"><br>
+                <input type="password" id="password" name="password" required minlength="12" maxlength="64"><br>
                 <br>
                 <label for="confirm-password">Confirm password</label><br>
-                <input type="password" id="confirm-password" name="confirm-password"><br>
+                <input type="password" id="confirm-password" name="confirm-password" required minlength="12" maxlength="64"><br>
                 <br>
                 <button type="submit" id="sign-up-btn">Sign Up</button>
             </form>
