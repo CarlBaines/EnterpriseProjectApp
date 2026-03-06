@@ -15,26 +15,30 @@
         <div class="input-container">
             <form>
                 <label for="username">Enter username</label><br>
-                <input type="text" id="username" name="username"><br>
+                <input type="text" id="username" name="username" required minlength="3" maxlength="32"><br>
                 <br>
                 <label for="password">Enter password</label><br>
-                <input type="password" id="password" name="password">
-                <a href = "forgotpassword.html"><p id="forgot-password-link">Forgot password?</p></a>
+                <input type="password" id="password" name="password" required minlength="12" maxlength="64">
+                <a href="forgotpassword.html">
+                    <p id="forgot-password-link">Forgot password?</p>
+                </a>
                 <button type="submit" id="login-btn">Login</button>
             </form>
         </div>
         <div class="sign-up-container">
             <p>Don't have an account?</p>
-            <a href = "signup.html"><p id="sign-up-link">Sign Up</p></a>
+            <a href="signup.html">
+                <p id="sign-up-link">Sign Up</p>
+            </a>
         </div>
     </div>
 
     <div id="dynamic-modal" class="modal">
         <div class="dynamic-modal-content">
             <img src="../assets/images/temp_app_logo.png" alt="temp-logo" class="logo">
-            <h1 id = "dynamic-modal-title">Title</h1>
-            <h2 id= "dynamic-modal-message">Message</h2>
-            <button type="submit" id = "dm-nav-btn">Continue</button>
+            <h1 id="dynamic-modal-title">Title</h1>
+            <h2 id="dynamic-modal-message">Message</h2>
+            <button type="submit" id="dm-nav-btn">Continue</button>
         </div>
     </div>
 </body>

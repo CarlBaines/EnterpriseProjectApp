@@ -28,8 +28,8 @@ async function validateForm() {
         return false;
     }
 
-    // Check if username is at least 3 characters long
-    if (username.length < 3) {
+    // Check if username is between 3 and 32 characters long
+    if (username.length <= 3 && username.length >= 32) {
         // alert('Username must be at least 3 characters long');
         modalState = 'u2';
         await determineModalContent(modalState)
@@ -84,7 +84,7 @@ async function validateForm() {
         return false;
     }
 
-    if (password.length < 12) {
+    if (password.length <= 12 && password.length >= 64) {
         // alert('Password must be at least 12 characters long');
         modalState = 'p2';
         await determineModalContent(modalState);
@@ -201,7 +201,7 @@ async function determineModalContent(description) {
 
         case 'u2':
             dynamicModalTitle.textContent = "Invalid Username!";
-            dynamicModalMessage.textContent = "Username must be at least 3 characters long. Please enter a valid username!";
+            dynamicModalMessage.textContent = "Username must be between 3 characters and 32 characters long. Please enter a valid username!";
             dynamicModalBtn.textContent = "Try Again!";
             dynamicModalBtn.onclick = () => {
                 dynamicModal.style.display = "none";
@@ -241,7 +241,7 @@ async function determineModalContent(description) {
 
         case 'p2':
             dynamicModalTitle.textContent = "Invalid Password!";
-            dynamicModalMessage.textContent = "Password must be at least 12 characters long. Please enter a valid password!";
+            dynamicModalMessage.textContent = "Password must be between 12 characters and 64 characters long. Please enter a valid password!";
             dynamicModalBtn.textContent = "Try Again!";
             dynamicModalBtn.onclick = () => {
                 dynamicModal.style.display = "none";
@@ -287,7 +287,7 @@ async function determineModalContent(description) {
 
 async function clearModalInputs(){
     usernameInput.value = '';
-    passwordInput.value = '';
+    // passwordInput.value = '';
     confirmPasswordInput.value = '';
 }
 
