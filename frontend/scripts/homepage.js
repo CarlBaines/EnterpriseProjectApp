@@ -8,14 +8,11 @@
   function renderGardens() {
     const gardenList = document.getElementById("garden-list");
     const template = document.getElementById("garden-item-template");
-    // Clear the current list of gardens
     gardenList.innerHTML = "";
 
-    // Retrieve the gardens from localStorage, or use an empty array if none exist
     const gardens = JSON.parse(localStorage.getItem(GARDEN_KEY)) || [];
 
     gardens.forEach((garden, index) => {
-      // Clone the template for each garden and populate it with data
       const gardenItem = template.content.cloneNode(true);
       const gardenItemElement = gardenItem.querySelector(".garden-item");
       gardenItemElement.dataset.id = String(garden.id || "");
@@ -24,12 +21,31 @@
         garden.image || "default-garden.jpg";
       gardenItem.querySelector(".garden-name").textContent =
         garden.name || "Unnamed Garden";
-      // Append the garden item to the garden list
       gardenList.appendChild(gardenItem);
     });
+
+    filterGardens();
   }
-  // Call renderGardens when the DOM is fully loaded
-  document.addEventListener("DOMContentLoaded", renderGardens);
+
+  function setupModalClose(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) {
+      return;
+    }
+
+    const closeButton = modal.querySelector(".close");
+    if (closeButton) {
+      closeButton.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+    }
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  }
 
   function deleteGarden(gardenId, gardenIndex) {
     // Retrieve the gardens from localStorage
@@ -63,10 +79,12 @@
 
   function openEditModal(gardenId, gardenIndex) {
     const modal = document.getElementById("myModal");
+    if (!modal) {
+      return;
+    }
+
     currentEditGardenId = String(gardenId || "");
     currentEditGardenIndex = Number(gardenIndex);
-
-    const span = document.getElementsByClassName("close")[0];
 
     const gardens = JSON.parse(localStorage.getItem(GARDEN_KEY)) || [];
     const selectedGarden =
@@ -75,20 +93,14 @@
 
     const imageInput = document.getElementById("garden-image");
     const nameInput = document.getElementById("garden-name-input");
+    if (!imageInput || !nameInput) {
+      return;
+    }
 
-    imageInput.value = selectedGarden?.image || selectedGarden?.imageUrl || "";
+    imageInput.value = "";
     nameInput.value = selectedGarden?.name || selectedGarden?.gardenName || "";
 
     modal.style.display = "block";
-
-    span.onclick = function () {
-      modal.style.display = "none";
-    };
-    window.onclick = function (event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    };
   }
 
   async function saveEditedGarden() {
@@ -96,6 +108,9 @@
     const imageInput = document.getElementById("garden-image");
     const nameInput = document.getElementById("garden-name-input");
     const modal = document.getElementById("myModal");
+    if (!imageInput || !nameInput || !modal) {
+      return;
+    }
 
     const indexById = gardens.findIndex(
       (garden) => String(garden.id) === currentEditGardenId,
@@ -106,9 +121,11 @@
       return;
     }
 
-    dataUrl = imageInput.files[0] ? await fileToDataUrl(imageInput.files[0]) : imageInput.value.trim();
-
     const existingGarden = gardens[targetIndex] || {};
+    const dataUrl = imageInput.files[0]
+      ? await fileToDataUrl(imageInput.files[0])
+      : existingGarden.image || existingGarden.imageUrl || "";
+
     gardens[targetIndex] = {
       ...existingGarden,
       image: dataUrl,
@@ -121,6 +138,10 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    renderGardens();
+    setupModalClose("myModal");
+    setupModalClose("sort-modal");
+
     const saveButton = document.getElementById("save-image-btn");
     if (saveButton) {
       saveButton.addEventListener("click", saveEditedGarden);
@@ -130,6 +151,16 @@
   function editGarden(gardenId, gardenIndex) {
     openEditModal(gardenId, gardenIndex);
   }
+
+  function openSortModal() {
+    const sortModal = document.getElementById("sort-modal");
+    if (!sortModal) {
+      return;
+    }
+
+    sortModal.style.display = "block";
+  }
+
   // Event delegation for edit buttons
   document.addEventListener("click", (event) => {
     if (event.target.classList.contains("edit-btn")) {
@@ -137,6 +168,13 @@
       const gardenId = gardenItem.dataset.id;
       const gardenIndex = gardenItem.dataset.index;
       editGarden(gardenId, gardenIndex);
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    const sortButton = event.target.closest(".sort-btn");
+    if (sortButton) {
+      openSortModal();
     }
   });
 
@@ -153,4 +191,62 @@
         reader.readAsDataURL(file);
     });
   }
+
+  function sortGardens(method) {
+    const gardens = JSON.parse(localStorage.getItem(GARDEN_KEY)) || [];
+    if (method === "nameAsc") {
+      gardens.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    } else if (method === "nameDesc") {
+      gardens.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
+    } else if (method === "dateAsc") {
+      gardens.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
+    } else if (method === "dateDesc") {
+      gardens.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
+    }
+    localStorage.setItem(GARDEN_KEY, JSON.stringify(gardens));
+    const sortModal = document.getElementById("sort-modal");
+    if (sortModal) {
+      sortModal.style.display = "none";
+    }
+    renderGardens();
+  }
+
+  document.addEventListener("click", (event) => {
+    if (event.target.id === "sort-name-asc-btn") {
+      sortGardens("nameAsc");
+    } else if (event.target.id === "sort-name-desc-btn") {
+      sortGardens("nameDesc");
+    } else if (event.target.id === "sort-date-newest-btn") {
+      sortGardens("dateAsc");
+    } else if (event.target.id === "sort-date-oldest-btn") {
+      sortGardens("dateDesc");
+    }
+  });
+
+  function filterGardens() {
+    const searchInput = document.getElementById("search-input");
+    const query = (searchInput?.value || "").toLowerCase().trim();
+
+    document.querySelectorAll("#garden-list .garden-item").forEach((item) => {
+      const name =
+        item.querySelector(".garden-name")?.textContent?.toLowerCase() || "";
+      item.style.display = name.includes(query) ? "" : "none";
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderGardens();
+    setupModalClose("myModal");
+    setupModalClose("sort-modal");
+
+    const saveButton = document.getElementById("save-image-btn");
+    if (saveButton) {
+      saveButton.addEventListener("click", saveEditedGarden);
+    }
+
+    const searchInput = document.getElementById("search-input");
+    if (searchInput) {
+      searchInput.addEventListener("input", filterGardens);
+    }
+  });
 })();
