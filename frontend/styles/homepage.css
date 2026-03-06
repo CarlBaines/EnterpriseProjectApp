@@ -103,22 +103,6 @@ body {
   display: inline-block;
 }
 
-.font-controls {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.font-controls button {
-  padding: 6px 8px;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: white;
-  cursor: pointer;
-}
-
 .fixed-bar-bottom {
   position: fixed;
   bottom: 0;
