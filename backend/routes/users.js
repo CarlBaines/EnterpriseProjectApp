@@ -37,7 +37,7 @@ router.get('/logout', routeHealthCheck('logout'));
 router.get('/', (request, response) => {
     response.status(200).json({
         message: "Users endpoint is operational!"
-    })
+    });
 });
 
 // /all route to retrieve all users in the database (for testing purposes, not for production use)
