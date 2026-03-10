@@ -20,6 +20,9 @@ app.get('/', (request, response) => {
 const usersRoute = require('./routes/users');
 app.use('/users', usersRoute);
 
+const gardenRoute = require('./routes/gardens');
+app.use('/gardens', gardenRoute);
+
 // 404 handler
 app.use((request, response) => {
     response.status(404).json({

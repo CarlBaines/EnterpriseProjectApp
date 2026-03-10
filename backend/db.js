@@ -18,8 +18,23 @@ db.exec(`
 // Drop users table if needed
 // db.exec(`DROP TABLE users`);
 
+db.exec(`
+    CREATE TABLE IF NOT EXISTS gardens (
+        garden_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        garden_name TEXT NOT NULL COLLATE NOCASE UNIQUE,
+        image_path TEXT NOT NULL,
+        has_image bool NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    )   
+`);
+
 const selectUsers = db.prepare(`SELECT * FROM users`).all();
 console.log("Current users in the database:", selectUsers);
+
+const selectGardens = db.prepare(`SELECT * FROM gardens`).all();
+console.log("Current gardens in the database:", selectGardens);
 
 // db.close();
 
