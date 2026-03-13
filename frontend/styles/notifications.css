@@ -25,12 +25,34 @@ body {
   background-color: #7ebc89;
   color: white;
   align-items: center;
+  border-bottom: 5px solid #77957D;
 }
 
-.app {
+.container {
   padding: 16px;
   padding-top: 80px;
-  padding-bottom: 60px;
+  border-bottom: 5px solid #E2DECC;
+}
+
+.mini-nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-arrow{
+  width: 35px;
+  height: auto;
+  cursor: pointer;
+  filter: opacity(20%);
+  padding-top: 5px;
+}
+
+.search-icon{
+  margin-top: 5px;
+  width: 35px;
+  height: auto;
+  cursor: pointer;
 }
 
 .fixed-bar-bottom {

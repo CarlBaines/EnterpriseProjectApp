@@ -19,12 +19,18 @@ function routeHealthCheck(routeName){
     }
 }
 
-router.get('/health', routeHealthCheck('health'));
+router.get('/', routeHealthCheck('gardens'));
 
 router.get('/all', (request, response) => {
     const selectGardens = db.prepare('SELECT * FROM gardens');
     try{
         const gardens = selectGardens.all();
+        if(gardens.length === 0){
+            return response.status(200).json({
+                message: "No gardens found for the user.",
+                gardens: []
+            });
+        }
         return response.status(200).json({
             message: "Gardens retrieved successfully!",
             gardens: gardens
@@ -33,7 +39,6 @@ router.get('/all', (request, response) => {
     catch(err){
         return response.status(500).json({
             message: "Error retrieving gardens from the database.",
-            gardens: gardens,
             error: err.message
         });
     }

@@ -2,7 +2,7 @@ const Database = require('better-sqlite3');
 
 // Set to users.db for now
 // Could have one centralised database or multiple databases for different purposes (e.g. users, plants, etc.)
-const db = new Database('users.db');
+const db = new Database('gardening_manager.db');
 
 // Create a users table
 db.exec(`
