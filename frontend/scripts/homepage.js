@@ -5,22 +5,23 @@
   let currentEditGardenIndex = -1;
 
   // Function to render the list of gardens on the homepage
-  function renderGardens() {
+  async function renderGardens() {
     const gardenList = document.getElementById("garden-list");
     const template = document.getElementById("garden-item-template");
     gardenList.innerHTML = "";
 
-    const gardens = JSON.parse(localStorage.getItem(GARDEN_KEY)) || [];
+    const gardens = await fetch("http://localhost:3000/gardens/gardens/user/1") 
+    const gardensData = await gardens.json();
 
-    gardens.forEach((garden, index) => {
+    gardensData.forEach((garden) => {
       const gardenItem = template.content.cloneNode(true);
       const gardenItemElement = gardenItem.querySelector(".garden-item");
-      gardenItemElement.dataset.id = String(garden.id || "");
-      gardenItemElement.dataset.index = String(index);
+      gardenItemElement.dataset.garden_id = String(garden.garden_id || "");
+      gardenItemElement.dataset.index = String(garden.index || "");
       gardenItem.querySelector(".garden-image").src =
-        garden.image || "default-garden.jpg";
+        garden.image_path || "default-garden.jpg";
       gardenItem.querySelector(".garden-name").textContent =
-        garden.name || "Unnamed Garden";
+        garden.garden_name || "Unnamed Garden";
       gardenList.appendChild(gardenItem);
     });
 
@@ -195,13 +196,13 @@
   function sortGardens(method) {
     const gardens = JSON.parse(localStorage.getItem(GARDEN_KEY)) || [];
     if (method === "nameAsc") {
-      gardens.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      gardens.sort((a, b) => (a.garden_name || "").localeCompare(b.garden_name || ""));
     } else if (method === "nameDesc") {
-      gardens.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
+      gardens.sort((a, b) => (b.garden_name || "").localeCompare(a.garden_name || ""));
     } else if (method === "dateAsc") {
-      gardens.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
+      gardens.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     } else if (method === "dateDesc") {
-      gardens.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
+      gardens.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     }
     localStorage.setItem(GARDEN_KEY, JSON.stringify(gardens));
     const sortModal = document.getElementById("sort-modal");

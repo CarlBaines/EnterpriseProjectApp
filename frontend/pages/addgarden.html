@@ -48,8 +48,10 @@
         event.preventDefault();
       }
 
+      const user_id = localStorage.getItem("user_id") || 1;
       const nameInput = document.getElementById("garden-name");
       const imageInput = document.getElementById("garden-image");
+
       if (!nameInput.value) {
         alert("Please enter a name for your garden.");
         return;
@@ -65,14 +67,35 @@
       alert("Saving garden: " + nameInput.value + " with image: " + dataUrl);
 
       const newGarden = {
-        name: nameInput.value,
-        image: dataUrl,
-        dateCreated: Date.now()
+        user_id: parseInt(user_id),
+        garden_name: nameInput.value,
+        image_path: dataUrl,
+        date_created: new Date().toISOString()
       };
 
-      let gardens = JSON.parse(localStorage.getItem("gardens")) || [];
-      gardens.push(newGarden);
-      localStorage.setItem("gardens", JSON.stringify(gardens));
+      try{
+        const response = await fetch("http://localhost:3000/gardens", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(newGarden)
+        });
+
+        const data = await response.json();
+        if(!response.ok) {
+          alert("Error saving garden: " + data.error);
+          return;
+        }
+
+        if(data.exists) {
+          alert("A garden with this name already exists. Please choose a different name.");
+          return;
+        }
+      } catch (error) {
+        alert("Backend error: " + error.message);
+        return;
+      }
 
       // Redirect to homepage after saving
       window.location.href = "homepage.html";
