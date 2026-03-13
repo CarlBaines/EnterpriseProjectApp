@@ -25,15 +25,9 @@ router.get('/all', (request, response) => {
     const selectGardens = db.prepare('SELECT * FROM gardens');
     try{
         const gardens = selectGardens.all();
-        // if(gardens.length === 0){
-        //     return response.status(204).json({
-        //         message: "No gardens found for the user.",
-        //         gardens: []
-        //     });
-        // }
         return response.status(200).json({
             message: "Gardens retrieved successfully!",
-            gardens: []
+            gardens: gardens
         });
     }
     catch(err){
