@@ -30,11 +30,36 @@ db.exec(`
     )   
 `);
 
+// Drop gardens table if needed
+// db.exec(`DROP TABLE gardens`);
+
+db.exec(`
+    CREATE TABLE IF NOT EXISTS notifications (
+        notification_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        garden_id INTEGER NULL,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        priority TEXT NOT NULL,
+        time TEXT NOT NULL,
+        is_read bool NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (garden_id) REFERENCES gardens(garden_id) ON DELETE SET NULL
+    )
+`);
+
+// Drop gardens table if needed
+// db.exec(`DROP TABLE notifications`);
+
 const selectUsers = db.prepare(`SELECT * FROM users`).all();
 console.log("Current users in the database:", selectUsers);
 
 const selectGardens = db.prepare(`SELECT * FROM gardens`).all();
 console.log("Current gardens in the database:", selectGardens);
+
+const selectNotifications = db.prepare(`SELECT * FROM notifications`).all();
+console.log("Current notifications in the database:", selectNotifications);
 
 // db.close();
 

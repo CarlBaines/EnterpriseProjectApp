@@ -7,7 +7,7 @@ function routeHealthCheck(routeName){
         try{
             db.prepare('SELECT 1').get(); // Simple query to check database connection
             return response.status(200).send({
-                message: `The users/${routeName} route is operational!`
+                message: `The gardens/${routeName} route is operational!`
             });
         }
         catch(err){
