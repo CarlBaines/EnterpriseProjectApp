@@ -1,8 +1,8 @@
-const Database = require('better-sqlite3');
+const Database = require("better-sqlite3");
 
 // Set to users.db for now
 // Could have one centralised database or multiple databases for different purposes (e.g. users, plants, etc.)
-const db = new Database('gardening_manager.db');
+const db = new Database("users.db");
 
 // Create a users table
 db.exec(`
@@ -22,11 +22,12 @@ db.exec(`
     CREATE TABLE IF NOT EXISTS gardens (
         garden_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
-        garden_name TEXT NOT NULL COLLATE NOCASE UNIQUE,
+        garden_name TEXT NOT NULL COLLATE NOCASE,
         image_path TEXT NOT NULL,
         has_image bool NOT NULL DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+        CONSTRAINT uq_user_garden UNIQUE (user_id, garden_name)
     )   
 `);
 

@@ -39,14 +39,8 @@
           <h2 class="garden-name"></h2>
           <!-- Edit and delete buttons -->
           <div class="garden-actions">
-            <button
-              class="edit-btn"
-              aria-label="Edit"
-            ></button>
-            <button
-              class="delete-btn"
-              aria-label="Delete"
-            ></button>
+            <button class="edit-btn" aria-label="Edit"></button>
+            <button class="delete-btn" aria-label="Delete"></button>
           </div>
         </div>
       </template>
@@ -60,7 +54,12 @@
           <h2>Edit Garden</h2>
         </div>
         <div class="modal-body">
-          <input type="file" accept=".jpg, .png, image/*" id="garden-image" class="modal-garden-image" />
+          <input
+            type="file"
+            accept=".jpg, .png, image/*"
+            id="garden-image"
+            class="modal-garden-image"
+          />
           <input
             class="garden-name-input"
             type="text"
