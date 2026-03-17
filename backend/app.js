@@ -23,6 +23,9 @@ app.use('/users', usersRoute);
 const gardenRoute = require('./routes/gardens');
 app.use('/gardens', gardenRoute);
 
+const notificationsRoute = require('./routes/notifications');
+app.use('./notifications', notificationsRoute);
+
 // 404 handler
 app.use((request, response) => {
     response.status(404).json({
