@@ -27,7 +27,7 @@ function createWindow() {
     },
   });
 
-  // win.setMenu(null);
+  win.setMenu(null);
   win.loadFile(path.join(__dirname, "..", "pages", "index.html"));
   return win;
 }
