@@ -235,6 +235,15 @@
     });
   }
 
+  function gardenToQueryString(garden) {
+    const params = new URLSearchParams({
+      id: garden.id || "",
+      name: garden.name || garden.gardenName || "",
+    });
+    return params.toString();
+  }
+    
+
   document.addEventListener("DOMContentLoaded", () => {
     renderGardens();
     setupModalClose("myModal");
@@ -249,5 +258,21 @@
     if (searchInput) {
       searchInput.addEventListener("input", filterGardens);
     }
+
+    document.getElementById("garden-list").addEventListener("click", (event) => {
+      const gardenItem = event.target.closest(".garden-item");
+      if (gardenItem) {
+        const gardenId = gardenItem.dataset.id;
+        const gardenIndex = gardenItem.dataset.index;
+        const gardens = JSON.parse(localStorage.getItem(GARDEN_KEY)) || [];
+        const selectedGarden =
+          gardens.find((garden) => String(garden.id) === String(gardenId)) ||
+          gardens[Number(gardenIndex)];
+        if (selectedGarden) {
+          const queryString = gardenToQueryString(selectedGarden);
+          window.location.href = `garden.html?${queryString}`;
+        }
+      }
+    });
   });
 })();
