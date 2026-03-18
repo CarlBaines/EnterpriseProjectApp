@@ -16,7 +16,7 @@ async function displayNotifications() {
 
     if (!notificationsList || !template || !countEl) return;
 
-    const response = await fetch(`http://127.0.0.1:3002/notifications/all`, {
+    const response = await fetch(`/notifications/all`, {
         method: 'GET',
         credentials: 'include',
     });

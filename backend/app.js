@@ -1,4 +1,5 @@
 // Import the Express module
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
@@ -17,7 +18,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
-app.use(express.static('pages')); // Serve static files from the 'pages' directory
+app.use(express.static(path.join(__dirname, '..', 'frontend'))); // Serve static files from the frontend
 app.use(express.json()); // Adds middleware to parse JSON request bodies
 
 app.use(session({

@@ -27,10 +27,17 @@ function routeHealthCheck(routeName) {
 
 router.get("/", routeHealthCheck("gardens"));
 
-router.get("/user/:user_id", requireLogin, (request, response) => {
+router.get("/user/user_id", requireLogin, (request, response) => {
+  
+  const userId = request.session.userId;
+  if(!userId){
+    return response.status(401).json({
+      message: "Unauthorised to access this resource. Please log in."
+    });
+  }
   const selectGardens = db.prepare("SELECT * FROM gardens WHERE user_id = ?");
   try {
-    const gardens = selectGardens.all(request.params.user_id);
+    const gardens = selectGardens.all(request.session.userId);
     if (gardens.length === 0) {
       return response.status(200).json({
         message: "No gardens found for the user.",
