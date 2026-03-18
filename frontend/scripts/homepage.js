@@ -1,5 +1,4 @@
 (() => {
-  const USER_ID = sessionStorage.getItem("user_id") || 1; // Default to 1 for testing
   let gardensCache = [];
   let currentEditGardenId = null;
 
@@ -13,9 +12,10 @@
   }
 
   async function fetchGardens() {
-    const userId = sessionStorage.getItem("user_id");
     const response = await fetch(
-      `http://localhost:3000/gardens/user/${encodeURIComponent(userId)}`,
+      `http://127.0.0.1:3002/gardens/user/${encodeURIComponent(userId)}`, {
+        credentials: "include"
+      }
     );
     const data = await response.json();
 
@@ -98,9 +98,10 @@
 
   async function deleteGarden(gardenId) {
     const response = await fetch(
-      `http://localhost:3000/gardens/delete/${gardenId}`,
+      `http://127.0.0.1:3002/gardens/delete/${gardenId}`,
       {
         method: "DELETE",
+        credentials: "include"
       },
     );
     const data = await response.json();
@@ -152,10 +153,11 @@
     };
 
     const response = await fetch(
-      `http://localhost:3000/gardens/update/${currentEditGardenId}`,
+      `http://127.0.0.1:3002/gardens/update/${currentEditGardenId}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(payload),
       },
     );

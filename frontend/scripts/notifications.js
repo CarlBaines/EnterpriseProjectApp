@@ -5,30 +5,32 @@ const accountIcon = document.querySelector('.account-icon');
 const addIcon = document.querySelector('.add-icon');
 const settingsIcon = document.querySelector('.settings-icon');
 
+const actionsFooter = document.querySelector('.actions-footer');
+const markAsReadBtn = document.getElementById('mark-as-read-btn');
+const clearBtn = document.getElementById('clear-btn');
 
-function displayNotifications() {
+async function displayNotifications() {
     const notificationsList = document.querySelector('.notifications-list');
     const template = document.getElementById('notification-template');
     const countEl = document.getElementById('notifications-num');
 
     if (!notificationsList || !template || !countEl) return;
 
-    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const response = await fetch(`http://127.0.0.1:3002/notifications/all`, {
+        method: 'GET',
+        credentials: 'include',
+    });
 
-    // const notifications = [
-    //     {
-    //         gardenName: "Rose Garden",
-    //         title: "Watering Reminder",
-    //         description: "Don't forget to water your roses today!",
-    //         priority: "High",
-    //         time: "2 hours ago",
-    //         read: false
-    //     }
-    // ]
+    const data = await response.json();
+    if(!response.ok){
+        console.error(data);
+        // window.location.href = 'login.html';
+        return;
+    }
 
     // Update number of notifications
-    const n = notifications.length;
-    countEl.textContent = `${n} new notification(s)`;
+    const notifications = Array.isArray(data.notifications) ? data.notifications : [];
+    countEl.textContent = `${notifications.length} new notification(s)`;
 
     // Clear existing notifications
     notificationsList.querySelectorAll(".garden-notifications")
@@ -37,10 +39,13 @@ function displayNotifications() {
     // Render clone of template for each notification
     notifications.forEach((notification, index) => {
         const clone = template.content.cloneNode(true);
+
+        const checkbox = clone.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener('change', updateActionsFooter);
+
         clone.querySelector('#garden-name').textContent =
             notification.gardenName ?? "Garden";
 
-        const checkbox = clone.querySelector('input[type="checkbox"]');
         const label = clone.querySelector('label');
 
         // Make checkbox id unique per clone
@@ -58,6 +63,11 @@ function displayNotifications() {
         notificationsList.insertBefore(clone, template);
 
     });
+}
+
+function updateActionsFooter() {
+    const anyChecked = document.querySelectorAll('.notifications-list input[type="checkbox"]:checked').length > 0;
+    actionsFooter.style.display = anyChecked ? "flex" : "none";
 }
 
 // Event listeners
@@ -91,6 +101,19 @@ if (settingsIcon) {
     });
 }
 
+if (markAsReadBtn) {
+    markAsReadBtn.addEventListener('click', () => {
+        alert("Mark as read functionality is not implemented yet.");
+    });
+}
+
+if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+        alert("Clear notifications functionality is not implemented yet.");
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     displayNotifications();
+    updateActionsFooter();
 });

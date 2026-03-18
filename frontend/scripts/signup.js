@@ -38,7 +38,7 @@ async function validateForm() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/users/usernamecheck', {
+        const response = await fetch('http://127.0.0.1:3002/users/usernamecheck', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -108,7 +108,7 @@ async function saveUser(username, password) {
     // console.log("Username passed to saveUser function:", username);
     // console.log("Password passed to saveUser function:", password);
     try {
-        const response = await fetch('http://localhost:3000/users/signup', {
+        const response = await fetch('http://127.0.0.1:3002/users/signup', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -155,7 +155,7 @@ async function displayRecoveryKeyModal(username) {
     // console.log("Attempting to fetch recovery key for username:", username);
     // Fetch the recovery key from the backend and display it in the modal
     try {
-        const response = await fetch('http://localhost:3000/users/recoverykey', {
+        const response = await fetch('http://127.0.0.1:3002/users/recoverykey', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

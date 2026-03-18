@@ -50,6 +50,11 @@ db.exec(`
     )
 `);
 
+// const exampleNotifications = db.prepare(`INSERT INTO notifications (user_id, garden_id, title, description, priority, time) VALUES (?, ?, ?, ?, ?, ?)`);
+// exampleNotifications.run(1, 1, "Watering Reminder", "Your tomato plants need watering today!", "High", "2024-06-01 09:00:00");
+// exampleNotifications.run(1, 2, "Fertilizer Alert", "Time to fertilize your rose bushes.", "Medium", "2024-06-02 10:00:00");
+// exampleNotifications.run(2, null, "General Tip", "Remember to check for pests regularly!", "Low", "2024-06-03 11:00:00");
+
 // Drop gardens table if needed
 // db.exec(`DROP TABLE notifications`);
 

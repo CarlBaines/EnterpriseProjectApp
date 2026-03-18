@@ -43,11 +43,12 @@ function validateLogin() {
   }
 
   // Use fetch API to send login request to the backend
-  fetch("http://localhost:3000/users/login", {
+  fetch("http://127.0.0.1:3002/users/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include", // Include cookies for session management
     body: JSON.stringify({
       username: username,
       password: password,
@@ -58,7 +59,6 @@ function validateLogin() {
       // Handle the response from the backend (account details match)
       if (account.exists) {
         // alert("Login successful!");
-        sessionStorage.setItem("user_id", account.user_id);
         modalState = "success";
         determineModalContent(modalState);
       } else {

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+const requireLogin = require("../middleware/auth");
+
 function routeHealthCheck(routeName) {
   return (request, response) => {
     try {
@@ -25,7 +27,7 @@ function routeHealthCheck(routeName) {
 
 router.get("/", routeHealthCheck("gardens"));
 
-router.get("/user/:user_id", (request, response) => {
+router.get("/user/:user_id", requireLogin, (request, response) => {
   const selectGardens = db.prepare("SELECT * FROM gardens WHERE user_id = ?");
   try {
     const gardens = selectGardens.all(request.params.user_id);
@@ -47,7 +49,7 @@ router.get("/user/:user_id", (request, response) => {
   }
 });
 
-router.post("/add", (request, response) => {
+router.post("/add", requireLogin, (request, response) => {
   try {
     const { user_id, garden_name, image_path, created_at, date_created } =
       request.body;
@@ -94,7 +96,7 @@ router.post("/add", (request, response) => {
   }
 });
 
-router.put("/update/:garden_id", (request, response) => {
+router.put("/update/:garden_id", requireLogin, (request, response) => {
   const { garden_id } = request.params;
   const { garden_name, image_path } = request.body;
   if (!garden_name && !image_path) {
@@ -155,7 +157,7 @@ router.put("/update/:garden_id", (request, response) => {
   }
 });
 
-router.delete("/delete/:garden_id", (request, response) => {
+router.delete("/delete/:garden_id", requireLogin, (request, response) => {
   const { garden_id } = request.params;
   const gardenExistsCheck = db.prepare(
     "SELECT * FROM gardens WHERE garden_id = ?",

@@ -32,6 +32,7 @@ router.get(
   routeHealthCheck("forgotpasswordusernamecheck"),
 );
 router.get("/signup", routeHealthCheck("signup"));
+// router.get("/me", routeHealthCheck("me"));
 router.get("/recoverykey", routeHealthCheck("recoverykey"));
 router.get("/forgotpassword", routeHealthCheck("forgotpassword"));
 router.get("/logout", routeHealthCheck("logout"));
@@ -64,6 +65,23 @@ router.get("/all", (request, response) => {
     });
   }
 });
+
+router.get("/me", (request, response) => {
+  if(!request.session.userId){
+    return response.status(401).json({
+      loggedIn: false,
+      message: "User is not logged in.",
+      userId: null
+    });
+  }
+  return response.status(200).json({
+    loggedIn: true,
+    message: "User is logged in.",
+    userId: request.session.userId
+  });
+});
+
+
 
 /*
     POST routes for login, signup, username check, forgot password, logout
@@ -131,11 +149,32 @@ router.post("/login", (request, response) => {
     });
   }
 
-  // Maybe could implement session management later.
-  return response.status(200).json({
-    exists: true,
-    message: "User Login Successful!",
-    user_id: user.user_id,
+  request.session.regenerate((err) => {
+    if(err){
+      return response.status(500).json({
+        exists: false,
+        message: "Session Regeneration Error",
+        err: err.message
+      });
+    }
+
+    request.session.userId = user.user_id;
+    request.session.save((err) => {
+      if(err){
+        return response.status(500).json({
+          exists: false,
+          message: "Session Save Error",
+          err: err.message
+        })
+      }
+
+      return response.status(200).json({
+        exists: true,
+        message: "User Login Successful!",
+      })
+    });
+
+    console.log("Session after login:", request.session);
   });
 });
 

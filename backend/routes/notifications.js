@@ -1,16 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const requireLogin = require('../middleware/auth');
 
-function routeHealthCheck(routeName){
+function routeHealthCheck(routeName) {
     return (request, response) => {
-        try{
+        try {
             db.prepare('SELECT 1').get(); // Simple query to check database connection
             return response.status(200).send({
                 message: `The notifications/${routeName} route is operational!`
             });
         }
-        catch(err){
+        catch (err) {
             return response.status(500).json({
                 message: "Database is not operational!",
                 error: err.message
@@ -19,10 +20,45 @@ function routeHealthCheck(routeName){
     }
 }
 
+router.get('/new', routeHealthCheck('new'));
+
 router.get('/', (request, response) => {
     response.status(200).json({
         message: "Notifications endpoint is operational!"
     });
+});
+
+router.get('/all', requireLogin, (request, response) => {
+    // Retrieve all notifications associated with the user
+    const userId = request.session.userId;
+    console.log("Fetching notifications for user_id:", userId);
+
+    if(!userId){
+        return response.status(401).json({
+            message: "Unauthorised: No user session found. Please log in."
+        });
+    }
+
+    const userExists = db.prepare('SELECT 1 FROM users WHERE user_id = ?').get(userId);
+    if (!userExists) {
+        return response.status(404).json({
+            message: `No user found with user_id=${userId}`
+        });
+    }
+
+    const selectNotifications = db.prepare(`
+        SELECT notification_id, garden_id, title, description, priority, time, is_read, created_at
+        FROM notifications
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+    `);
+    const notifications = selectNotifications.all(userId);
+
+    return response.status(200).json({
+        message: "Notifications retrieved successfully",
+        count: notifications.length,
+        notifications: notifications
+    })
 });
 
 module.exports = router;
