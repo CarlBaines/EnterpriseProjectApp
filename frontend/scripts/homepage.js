@@ -24,6 +24,7 @@
       throw new Error(
         data?.error || data?.message || "Failed to fetch gardens",
       );
+      // window.location.href = 'login.html';
 
     const raw = Array.isArray(data?.gardens)
       ? data.gardens

@@ -1,0 +1,13 @@
+{
+  "name": "enterpriseprojectapp",
+  "private": true,
+  "scripts": {
+    "start:backend": "npm --prefix backend start",
+    "start:frontend": "npm --prefix frontend start",
+    "start": "concurrently -k -n BACKEND,FRONTEND \"npm --prefix backend start\" \"wait-on tcp:3002 && npm --prefix frontend start\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "wait-on": "^7.2.0"
+  }
+}
