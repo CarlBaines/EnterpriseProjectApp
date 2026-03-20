@@ -58,8 +58,10 @@ body {
 
 .app {
   padding: 16px;
-  padding-top: 80px;
+  padding-top: 130px;
   padding-bottom: 60px;
+  align-items: center;
+  text-align: center;
 }
 
 .fixed-bar-bottom {
@@ -102,4 +104,20 @@ body {
   background: transparent url("../assets/images/settings.png") center/contain
     no-repeat;
   margin-right: 16px;
+}
+
+.profile-picture {
+  width: 180px;
+  height: 180px;
+  border: none;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover;
+  outline: none;
+}
+
+.user-name {
+  margin-top: 16px;
+  font-size: 2em;
 }

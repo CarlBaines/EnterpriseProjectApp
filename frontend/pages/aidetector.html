@@ -1,26 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Average Color Picker</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Average Color Picker</title>
     <link rel="stylesheet" href="../styles/ai.css" />
-</head>
-<body>
+  </head>
+  <body>
+    <h2>Leaf Disease Detection</h2>
 
-  <h2>Leaf Disease Detection</h2>
+    <input type="file" id="fileInput" accept="image/*" />
+    <br />
 
-  <input type="file" id="fileInput" accept="image/*">
-  <br>
+    <img id="preview" />
+    <canvas id="canvas" style="display: none"></canvas>
 
-  
-  <img id="preview" />
-  <canvas id="canvas" style="display:none;"></canvas>
+    <!--<div id="colorBox"></div>-->
+    <p id="colorText">Is it healthy?: -</p>
 
-  <!--<div id="colorBox"></div>-->
-  <p id="colorText">Is it healthy?: -</p>
-
-  <script src="../scripts/aiplantdetector.js"></script>
-  <script src="../scripts/convnet.js"></script>
-
-</body>
+    <script src="../scripts/aiplantdetector.js"></script>
+    <script src="../scripts/convnet.js"></script>
+  </body>
 </html>

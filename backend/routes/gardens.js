@@ -56,6 +56,30 @@ router.get("/user/user_id", requireLogin, (request, response) => {
   }
 });
 
+router.get("/user/:username", requireLogin, (request, response) => {
+  const { username } = request.params;
+  const selectGardens = db.prepare(`SELECT * FROM gardens WHERE user_id = (SELECT user_id FROM users WHERE username = ?)`);
+  try {
+    const gardens = selectGardens.all(username);
+    if (gardens.length === 0) {
+      return response.status(200).json({
+        message: "No gardens found for the user.",
+        gardens: [],
+      });
+    }
+    return response.status(200).json({
+      message: "Gardens retrieved successfully!",
+      gardens: gardens,
+    });
+  } catch (err) {
+    return response.status(500).json({
+      message: "Error retrieving gardens from the database.",
+      error: err.message,
+    });
+  }
+});
+
+
 router.post("/add", requireLogin, (request, response) => {
   try {
     const { user_id, garden_name, image_path, created_at, date_created } =

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,34 +12,26 @@
     <div class="fixed-bar-top">
       <h1>Account</h1>
     </div>
-    <div class="app">
-      <div class="fixed-bar-back">
+    <div class="fixed-bar-back">
       <button
         class="back-btn"
         onclick="window.location.href = 'homepage.html'"
       ></button>
+      <button class="edit-btn"></button>
     </div>
+    <div class="app">
+      <div class="account-info">
+        <img
+          src="../assets/images/user.png"
+          class="profile-picture"
+          id="profile-picture"
+          alt="Profile picture"
+        />
+        <p class="user-name" id="user-name" style="font-weight: bolder">
+          [Username]
+        </p>
+      </div>
     </div>
-
-    <label>
-          <input
-            type="file"
-            accept=".jpg, .png, image/*"
-            id="garden-image"
-            class="garden-image"
-          />
-        </label>
-        <p style="font-weight: bold">Preview Image</p>
-        <label>
-          <input
-            class="garden-name"
-            id="garden-name"
-            type="text"
-            placeholder="Name"
-            required
-          />
-        </label>
-
     <div class="fixed-bar-bottom">
       <button
         class="bottom-navbar-btn"

@@ -71,13 +71,16 @@ router.get("/me", (request, response) => {
     return response.status(401).json({
       loggedIn: false,
       message: "User is not logged in.",
-      userId: null
+      userId: null,
+      username: null
     });
   }
+
   return response.status(200).json({
     loggedIn: true,
     message: "User is logged in.",
-    userId: request.session.userId
+    userId: request.session.userId,
+    username: request.session.username || null
   });
 });
 
@@ -159,6 +162,7 @@ router.post("/login", (request, response) => {
     }
 
     request.session.userId = user.user_id;
+    request.session.username = user.username;
     request.session.save((err) => {
       if(err){
         return response.status(500).json({
