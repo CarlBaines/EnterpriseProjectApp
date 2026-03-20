@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Average Color Picker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    img {
+      max-width: 300px;
+      margin-top: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #colorBox {
+      width: 100px;
+      height: 100px;
+      margin: 20px auto;
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Leaf Disease Detection</h2>
+
+  <input type="file" id="fileInput" accept="image/*">
+  <br>
+
+  
+  <img id="preview" />
+  <canvas id="canvas" style="display:none;"></canvas>
+
+  <!--<div id="colorBox"></div>-->
+  <p id="colorText">Is it healthy?: -</p>
+
+  <script src="../scripts/aiplantdetector.js"></script>
+  <script src="../scripts/convnet.js"></script>
+
+</body>
+</html>
