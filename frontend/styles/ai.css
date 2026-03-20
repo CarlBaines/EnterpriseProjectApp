@@ -1,0 +1,29 @@
+:root {
+    --primary-color: #7ebc89;
+    --background-color: #000000;
+    --text-color: #333;
+    --base-font-size: 16px;
+    --app-icon-size: 200px;
+}
+
+body {
+    background-color: #f6f1de;
+    background-color: var(--primary-color);
+    font-family: "Inter", sans-serif;
+    text-align: center;
+    padding: 20px;
+    font-size: var(--base-font-size);
+}
+img {
+    max-width: 300px;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+#colorBox {
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+    border: 1px solid #000;
+}
