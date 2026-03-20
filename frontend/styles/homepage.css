@@ -200,8 +200,8 @@ body {
 }
 
 .edit-btn {
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   background-size: contain;
   background-repeat: no-repeat;
@@ -211,7 +211,7 @@ body {
   cursor: pointer;
   position: absolute;
   top: 8px;
-  right: 46px;
+  right: 40px;
   z-index: 4;
 }
 

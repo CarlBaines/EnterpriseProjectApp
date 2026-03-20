@@ -13,9 +13,49 @@
       <h1>Account</h1>
     </div>
     <div class="app">
-      <button onclick="window.location.href = 'homepage.html'">
-        Back to Main Page
-      </button>
+      <div class="fixed-bar-back">
+      <button
+        class="back-btn"
+        onclick="window.location.href = 'homepage.html'"
+      ></button>
+    </div>
+    </div>
+
+    <label>
+          <input
+            type="file"
+            accept=".jpg, .png, image/*"
+            id="garden-image"
+            class="garden-image"
+          />
+        </label>
+        <p style="font-weight: bold">Preview Image</p>
+        <label>
+          <input
+            class="garden-name"
+            id="garden-name"
+            type="text"
+            placeholder="Name"
+            required
+          />
+        </label>
+
+    <div class="fixed-bar-bottom">
+      <button
+        class="bottom-navbar-btn"
+        aria-label="Account"
+        onclick="window.location.href = 'account.html'"
+      ></button>
+      <button
+        class="bottom-navbar-btn"
+        aria-label="Add"
+        onclick="window.location.href = 'addgarden.html'"
+      ></button>
+      <button
+        class="bottom-navbar-btn"
+        aria-label="Settings"
+        onclick="window.location.href = 'settings.html'"
+      ></button>
     </div>
   </body>
 </html>
