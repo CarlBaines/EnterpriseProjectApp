@@ -43,7 +43,7 @@ function validateLogin() {
   }
 
   // Use fetch API to send login request to the backend
-  fetch("http://127.0.0.1:3002/users/login", {
+  fetch("/users/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

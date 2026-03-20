@@ -28,7 +28,7 @@ async function saveGarden(event) {
       };
 
       try {
-        const response = await fetch("http://127.0.0.1:3002/gardens/add", {
+        const response = await fetch("/gardens/add", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",

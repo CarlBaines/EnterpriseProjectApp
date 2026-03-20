@@ -27,7 +27,7 @@ async function promptRecoveryKeyInput() {
         return;
     }
 
-    const response = await fetch('http://127.0.0.1:3002/users/forgotpasswordusernamecheck', {
+    const response = await fetch('/users/forgotpasswordusernamecheck', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ async function submitRecoveryKey() {
         return;
     }
 
-    const response = await fetch('http://127.0.0.1:3002/users/recoverykeycheck', {
+    const response = await fetch('/users/recoverykeycheck', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -119,7 +119,7 @@ async function submitNewPassword() {
         return;
     }
 
-    const response = await fetch('http://127.0.0.1:3002/users/forgotpassword', {
+    const response = await fetch('/users/forgotpassword', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

@@ -13,7 +13,8 @@
 
   async function fetchGardens() {
     const response = await fetch(
-      `http://127.0.0.1:3002/gardens/user/${encodeURIComponent(userId)}`, {
+      `/gardens/user/user_id`, {
+        method: "GET",
         credentials: "include"
       }
     );
@@ -23,6 +24,7 @@
       throw new Error(
         data?.error || data?.message || "Failed to fetch gardens",
       );
+      // window.location.href = 'login.html';
 
     const raw = Array.isArray(data?.gardens)
       ? data.gardens
@@ -98,7 +100,7 @@
 
   async function deleteGarden(gardenId) {
     const response = await fetch(
-      `http://127.0.0.1:3002/gardens/delete/${gardenId}`,
+      `/gardens/delete/${gardenId}`,
       {
         method: "DELETE",
         credentials: "include"
@@ -153,7 +155,7 @@
     };
 
     const response = await fetch(
-      `http://127.0.0.1:3002/gardens/update/${currentEditGardenId}`,
+      `/gardens/update/${currentEditGardenId}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

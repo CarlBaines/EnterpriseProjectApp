@@ -2,6 +2,7 @@
 const path = require("path");
 const { app, BrowserWindow } = require("electron");
 
+
 if (!app.isPackaged) {
   try {
     require("electron-reload")(path.join(__dirname, ".."), {
@@ -26,9 +27,9 @@ function createWindow() {
       contextIsolation: true,
     },
   });
-
+//win.webContents.openDevTools();
   // win.setMenu(null);
-  win.loadFile(path.join(__dirname, "..", "pages", "index.html"));
+  win.loadURL("http://127.0.0.1:3002/pages/index.html"); // Load the homepage from the backend server
   return win;
 }
 
