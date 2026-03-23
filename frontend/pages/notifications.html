@@ -7,9 +7,22 @@
     <link rel="stylesheet" href="../styles/notifications.css" />
   </head>
 
-  <body>
-    <div class="fixed-bar-top">
-      <h1>Notifications</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications</title>
+  <link rel="stylesheet" href="../styles/notifications.css" />
+</head>
+
+<body>
+  <div class="fixed-bar-top">
+    <h1>Notifications</h1>
+  </div>
+  <div class="container">
+    <div class="mini-nav">
+      <img src="../assets/images/back.png" alt="back-arrow" class="back-arrow">
+      <input type="text" placeholder="Search..." class="search-input" id="search-input">
+      <img src="../assets/images/search.png" alt="search-icon" class="search-icon">
     </div>
     <div class="container">
       <div class="mini-nav">
@@ -24,16 +37,14 @@
           class="search-icon"
         />
       </div>
-      <div class="notifications-list">
-        <div class="notifications-header">
-          <img
-            src="../assets/images/notifications.png"
-            alt="notifications"
-            class="notifications-icon"
-          />
-          <div class="notifications-total">
-            <h2>Notifications</h2>
-            <h3 id="notifications-num">(num) new notifications</h3>
+      <template id = "notification-template">
+        <div class="garden-notifications">
+          <div class="notification-content">
+            <input type="checkbox" id="notification" name="notification-checkbox" value="notification-checkbox">
+            <label for="notification" id="notificationlabel">Water Tomato Plant</label>
+            <div class="n-priority" id="n-priority">High</div>
+            <p id="n-description">Needs watering today</p>
+            <p id="n-time">2 hours ago</p>
           </div>
         </div>
         <template id="notification-template">
@@ -57,26 +68,18 @@
         </template>
       </div>
     </div>
-    <!--style= "display: none"-->
-    <div id="actions-footer" class="actions-footer">
-      <button type="submit" class="mark-as-read-btn" id="mark-as-read-btn">
-        Mark all as read
-      </button>
-      <button type="submit" class="clear-btn" id="clear-btn">Clear all</button>
-    </div>
-    <div class="footer">
-      <img
-        src="../assets/images/user.png"
-        alt="user-icon"
-        class="account-icon"
-      />
-      <img src="../assets/images/add.png" alt="add-icon" class="add-icon" />
-      <img
-        src="../assets/images/settings.png"
-        alt="settings-icon"
-        class="settings-icon"
-      />
-    </div>
-    <script src="../scripts/notifications.js"></script>
-  </body>
+  </div>
+
+  <div id="actions-footer" class="actions-footer">
+    <button type="submit" class="mark-as-read-btn" id="mark-as-read-btn">Mark all as read</button>
+    <button type="submit" class="clear-btn" id ="clear-btn">Clear all</button>
+  </div>
+  <div class="footer">
+    <img src="../assets/images/user.png" alt="user-icon" class="account-icon">
+    <img src="../assets/images/add.png" alt="add-icon" class="add-icon">
+    <img src="../assets/images/settings.png" alt="settings-icon" class="settings-icon">
+  </div>
+  <script src="../scripts/notifications.js"></script>
+</body>
+
 </html>

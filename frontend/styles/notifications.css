@@ -1,8 +1,9 @@
 :root {
-  --primary-color: #7ebc89;
-  --background-color: #f6f1de;
+  --primary-color: #7EBC89;
+  --background-color: #F6F1DE;
   --text-color: #333;
   --base-font-size: 16px;
+  --drop-shadow: 0px 4px 2px rgba(0, 0, 0, 0.25);
 }
 
 body {
@@ -40,11 +41,22 @@ body {
   padding-bottom: 15px;
 }
 
+.mini-nav .search-input {
+  display: none;
+  width: 200px;
+  font-size: 1rem;
+  padding: 8px 12px;
+  border: 3px solid #cfd9d1;
+  border-radius: 28px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
 .back-arrow {
   width: 35px;
   height: auto;
   cursor: pointer;
-  filter: opacity(20%);
+  filter: opacity(20%) drop-shadow(0px 2px 2px rgba(0,0,0,0.1));
   padding-top: 5px;
 }
 
@@ -53,6 +65,7 @@ body {
   width: 35px;
   height: auto;
   cursor: pointer;
+  filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));
 }
 
 .fixed-bar-bottom {
@@ -112,6 +125,7 @@ body {
   background-color: white;
   border-radius: 25px;
   padding: 24px 12px 12px 24px;
+  filter: drop-shadow(var(--drop-shadow));
 }
 
 .notification-content input {
@@ -133,6 +147,10 @@ body {
 
 #n-time {
   margin-top: -10px;
+}
+
+#n-priority{
+  filter: drop-shadow(var(--drop-shadow));
 }
 
 .actions-footer {
@@ -164,7 +182,7 @@ body {
   padding: 10px 20px;
   border-radius: 25px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -176,7 +194,7 @@ body {
   padding: 10px 20px;
   border-radius: 25px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -199,4 +217,5 @@ body {
   width: 50px;
   height: auto;
   cursor: pointer;
+  filter: drop-shadow(var(--drop-shadow));
 }
