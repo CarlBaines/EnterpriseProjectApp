@@ -17,7 +17,7 @@
         class="back-btn"
         onclick="window.location.href = 'homepage.html'"
       ></button>
-      <button class="edit-btn"></button>
+      <button id="edit-btn" class="edit-btn"></button>
     </div>
     <div class="app">
       <div class="account-info">
@@ -34,6 +34,47 @@
         <p class="user-gender" id="user-gender">[Gender]</p>
       </div>
     </div>
+
+    <div id="edit-modal" class="edit-modal">
+      <div class="edit-modal-content">
+        <div class="edit-modal-header">
+          <span class="close">&times;</span>
+          <h2>Edit Account Information</h2>
+        </div>
+        <div class="edit-modal-body">
+          <input
+            type="file"
+            accept=".jpg, .png, image/*"
+            id="edit-profile-picture"
+            class="edit-profile-picture"
+          />
+          <label for="edit-age">Age Group:</label>
+          <select id="edit-age" name="edit-age">
+            <option value="">Select age group</option>
+            <option value="under_18">Under 18</option>
+            <option value="18_24">18-24</option>
+            <option value="25_34">25-34</option>
+            <option value="35_44">35-44</option>
+            <option value="45_54">45-54</option>
+            <option value="55_64">55-64</option>
+            <option value="65_plus">65+</option>
+            <option value="prefer_not_to_say">Prefer not to say</option>
+          </select>
+          <label for="edit-gender">Gender:</label>
+          <select id="edit-gender" name="edit-gender">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="non_binary">Non-binary</option>
+            <option value="prefer_not_to_say">Prefer not to say</option>
+          </select>
+        </div>
+        <div class="edit-modal-footer">
+          <button id="save-account-btn">Save</button>
+        </div>
+      </div>
+    </div>
+
     <div class="fixed-bar-bottom">
       <button
         class="bottom-navbar-btn"

@@ -144,6 +144,7 @@ body {
   padding: 10px 16px;
   border-radius: 28px;
   border: 4px solid #d1dad2;
+  filter: drop-shadow(0, 0, 3px, (0, 0, 0, 0.1));
 }
 
 .user-gender {
@@ -153,4 +154,89 @@ body {
   padding: 10px 16px;
   border-radius: 28px;
   border: 4px solid #d1dad2;
+}
+
+.edit-modal {
+  margin-top: 120px;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+}
+
+.modal-content {
+  margin: 0;
+  width: min(90vw, 420px);
+  background-color: #fefefe;
+  border: 1px solid #888;
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+.modal-body {
+  padding: 2px 16px;
+}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+.modal-garden-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  background-color: #ffffff;
+  background-image: url("../assets/images/image-blank.png");
+  background-repeat: no-repeat;
+  background-position: calc(50% + 8px) 50%;
+  background-size: 120px;
+  border: 2px solid #d1dad2;
+  cursor: pointer;
+  color: transparent;
+  text-shadow: none;
+}
+
+.modal-garden-image::file-selector-button {
+  display: none;
+}
+
+.modal-garden-image::-webkit-file-upload-button {
+  display: none;
+}
+
+.hidden {
+  display: none !important;
 }
