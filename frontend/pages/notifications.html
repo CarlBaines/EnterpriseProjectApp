@@ -15,6 +15,7 @@
   <div class="container">
     <div class="mini-nav">
       <img src="../assets/images/back.png" alt="back-arrow" class="back-arrow">
+      <input type="text" placeholder="Search..." class="search-input" id="search-input">
       <img src="../assets/images/search.png" alt="search-icon" class="search-icon">
     </div>
     <div class="notifications-list">
@@ -27,7 +28,6 @@
       </div>
       <template id = "notification-template">
         <div class="garden-notifications">
-          <h2 id="garden-name">X Garden</h2>
           <div class="notification-content">
             <input type="checkbox" id="notification" name="notification-checkbox" value="notification-checkbox">
             <label for="notification" id="notificationlabel">Water Tomato Plant</label>
@@ -39,7 +39,7 @@
       </template>
     </div>
   </div>
-  <!--style= "display: none"-->
+
   <div id="actions-footer" class="actions-footer">
     <button type="submit" class="mark-as-read-btn" id="mark-as-read-btn">Mark all as read</button>
     <button type="submit" class="clear-btn" id ="clear-btn">Clear all</button>

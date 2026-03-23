@@ -2,6 +2,7 @@
 const backArrow = document.querySelector('.back-arrow');
 const searchIcon = document.querySelector('.search-icon');
 const accountIcon = document.querySelector('.account-icon');
+const searchBar = document.getElementById('search-input');
 const addIcon = document.querySelector('.add-icon');
 const settingsIcon = document.querySelector('.settings-icon');
 
@@ -24,7 +25,6 @@ async function displayNotifications() {
     const data = await response.json();
     if(!response.ok){
         console.error(data);
-        // window.location.href = 'login.html';
         return;
     }
 
@@ -32,19 +32,12 @@ async function displayNotifications() {
     const notifications = Array.isArray(data.notifications) ? data.notifications : [];
     countEl.textContent = `${notifications.length} new notification(s)`;
 
-    // Clear existing notifications
-    notificationsList.querySelectorAll(".garden-notifications")
-        .forEach(el => el.remove());
-
     // Render clone of template for each notification
     notifications.forEach((notification, index) => {
         const clone = template.content.cloneNode(true);
 
         const checkbox = clone.querySelector('input[type="checkbox"]');
         checkbox.addEventListener('change', updateActionsFooter);
-
-        clone.querySelector('#garden-name').textContent =
-            notification.gardenName ?? "Garden";
 
         const label = clone.querySelector('label');
 
@@ -57,17 +50,63 @@ async function displayNotifications() {
         // Render content
         label.textContent = notification.title ?? "Notification";
         clone.querySelector('#n-priority').textContent = notification.priority ?? "";
+
+        // Style the priority text based on its value
+        const priorityEl = clone.querySelector('#n-priority');
+        decideNotificationPriorityStyle(notification.priority, priorityEl);
+
         clone.querySelector('#n-description').textContent = notification.description ?? "";
         clone.querySelector('#n-time').textContent = notification.time ?? "";
 
         notificationsList.insertBefore(clone, template);
 
     });
+
+    filterNotifications();
 }
 
 function updateActionsFooter() {
     const anyChecked = document.querySelectorAll('.notifications-list input[type="checkbox"]:checked').length > 0;
     actionsFooter.style.display = anyChecked ? "flex" : "none";
+}
+
+function decideNotificationPriorityStyle(notificationPriority, priorityEl){
+    switch(notificationPriority){
+        case "High":
+            priorityEl.style.backgroundColor = "#F4CDC6";
+            break;
+        case "Medium":
+            priorityEl.style.backgroundColor = "orange";
+            break;
+        case "Low":
+            priorityEl.style.backgroundColor = "#7EBC89";
+            break;
+    }
+}
+
+function filterNotifications(){
+    const input = document.getElementById('search-input');
+    const query = (input?.value || "").toLowerCase().trim();
+    const items = document.querySelectorAll(
+        ".notifications-list .garden-notifications"
+    );
+
+    // Number of visible notifications
+    let visible = 0;
+
+    items.forEach((item) => {
+        const title = item.querySelector(".notification-content label")?.textContent || "";
+        const priority = item.querySelector("#n-priority")?.textContent || "";
+        const description = item.querySelector("#n-description")?.textContent || "";
+
+        const searchableText = `${title} ${priority} ${description}`.toLowerCase();
+        const show = query === "" || searchableText.includes(query);
+
+        item.style.display = show ? "" : "none";
+        if(show){
+            visible++;
+        }
+    })
 }
 
 // Event listeners
@@ -79,7 +118,9 @@ if (backArrow) {
 
 if (searchIcon) {
     searchIcon.addEventListener('click', () => {
-        alert("Search functionality is not implemented yet.");
+        searchBar.style.display = "block";
+        searchBar.focus();
+        filterNotifications();
     });
 }
 
@@ -91,7 +132,7 @@ if (accountIcon) {
 
 if (addIcon) {
     addIcon.addEventListener('click', () => {
-        alert("Add functionality is not implemented yet.");
+        window.location.href = 'addgarden.html';
     });
 }
 
@@ -116,4 +157,10 @@ if (clearBtn) {
 document.addEventListener("DOMContentLoaded", () => {
     displayNotifications();
     updateActionsFooter();
+
+    const searchBar = document.getElementById('search-input');
+    if(searchBar){
+        searchBar.value = "";
+        searchBar.addEventListener('input', filterNotifications);
+    }
 });

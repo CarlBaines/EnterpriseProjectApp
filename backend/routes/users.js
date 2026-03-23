@@ -159,6 +159,7 @@ router.post("/login", (request, response) => {
     }
 
     request.session.userId = user.user_id;
+    request.session.username = user.username;
     request.session.save((err) => {
       if(err){
         return response.status(500).json({
