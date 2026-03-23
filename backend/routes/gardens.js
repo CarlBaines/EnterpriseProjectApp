@@ -82,9 +82,9 @@ router.get("/user/:username", requireLogin, (request, response) => {
 
 router.post("/add", requireLogin, (request, response) => {
   try {
-    const { user_id, garden_name, image_path, created_at, date_created } =
+    const { user_id, garden_name, image_path, created_at } =
       request.body;
-    const timestamp = created_at || date_created || new Date().toISOString();
+    const timestamp = created_at || new Date().toISOString();
 
     if (!user_id || !garden_name || !image_path) {
       return response.status(400).json({

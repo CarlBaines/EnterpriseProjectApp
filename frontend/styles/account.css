@@ -56,6 +56,21 @@ body {
   border: none;
 }
 
+.edit-btn {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: transparent url("../assets/images/edit.png") center/contain
+    no-repeat;
+  cursor: pointer;
+  display: inline-block;
+  border: none;
+  position: absolute;
+  top: 60%;
+  transform: translateY(-50%);
+  right: 90px;
+}
+
 .app {
   padding: 16px;
   padding-top: 130px;
@@ -120,4 +135,22 @@ body {
 .user-name {
   margin-top: 16px;
   font-size: 2em;
+}
+
+.user-age-group {
+  margin-top: 8px;
+  font-size: 1.2em;
+  background-color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 28px;
+  border: 4px solid #d1dad2;
+}
+
+.user-gender {
+  margin-top: 4px;
+  font-size: 1.2em;
+  background-color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 28px;
+  border: 4px solid #d1dad2;
 }
