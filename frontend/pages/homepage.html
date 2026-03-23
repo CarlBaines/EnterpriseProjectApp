@@ -20,14 +20,23 @@
       <button class="sort-btn" aria-label="Sort"></button>
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Search gardens..."
         aria-label="Search"
         class="search-input"
         id="search-input"
       />
-      <p class="search-icon"></p>
+      <button
+        id="search-action-btn"
+        class="search-action-btn"
+        aria-label="Search"
+        disabled
+      ></button>
     </div>
     <div class="app">
+      <p id="search-feedback" class="search-feedback" aria-live="polite"></p>
+      <p id="no-results" class="no-results hidden" aria-live="polite">
+        No gardens match that search.
+      </p>
       <section id="garden-list" class="garden-list"></section>
 
       <!-- Template for garden items -->
@@ -50,8 +59,8 @@
       <!-- Modal content -->
       <div class="modal-content">
         <div class="modal-header">
-          <span class="close">&times;</span>
           <h2>Edit Garden</h2>
+          <span class="close">&times;</span>
         </div>
         <div class="modal-body">
           <input
@@ -73,19 +82,25 @@
       </div>
     </div>
 
-    <div id="sort-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span class="close">&times;</span>
-          <h2>Sort Gardens</h2>
-        </div>
-        <div class="modal-body">
-          <button id="sort-name-asc-btn">Name Ascending</button>
-          <button id="sort-name-desc-btn">Name Descending</button>
-          <button id="sort-date-newest-btn">Date Created (Newest)</button>
-          <button id="sort-date-oldest-btn">Date Created (Oldest)</button>
-        </div>
-      </div>
+    <div
+      id="sort-modal"
+      class="sort-menu"
+      aria-label="Sort gardens"
+      role="menu"
+    >
+      <p class="sort-menu-title">Sort By</p>
+      <button id="sort-name-asc-btn" class="sort-option" role="menuitem">
+        Name (A-Z)
+      </button>
+      <button id="sort-name-desc-btn" class="sort-option" role="menuitem">
+        Name (Z-A)
+      </button>
+      <button id="sort-date-newest-btn" class="sort-option" role="menuitem">
+        Date Created (Newest)
+      </button>
+      <button id="sort-date-oldest-btn" class="sort-option" role="menuitem">
+        Date Created (Oldest)
+      </button>
     </div>
 
     <div class="fixed-bar-bottom">

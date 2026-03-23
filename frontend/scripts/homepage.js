@@ -1,6 +1,31 @@
 (() => {
   let gardensCache = [];
   let currentEditGardenId = null;
+  let searchDebounceTimer = null;
+  const DEFAULT_GARDEN_PREVIEW = "../assets/images/image-blank.png";
+  const SEARCH_DEBOUNCE_MS = 120;
+
+  function setGardenPreviewImage(inputElement, imagePath) {
+    if (!inputElement) {
+      return;
+    }
+
+    const previewSrc =
+      imagePath && imagePath !== "default-garden.jpg"
+        ? imagePath
+        : DEFAULT_GARDEN_PREVIEW;
+
+    inputElement.style.backgroundImage = `url(${previewSrc})`;
+
+    if (previewSrc === DEFAULT_GARDEN_PREVIEW) {
+      inputElement.style.backgroundSize = "120px";
+      inputElement.style.backgroundPosition = "calc(50% + 8px) 50%";
+      return;
+    }
+
+    inputElement.style.backgroundSize = "cover";
+    inputElement.style.backgroundPosition = "center";
+  }
 
   function normalizeGarden(g) {
     return {
@@ -73,9 +98,55 @@
       gardenList.querySelectorAll(".garden-item").length,
     );
 
-    // only filter if user actually typed something
     const q = (document.getElementById("search-input")?.value || "").trim();
-    if (q) filterGardens();
+    filterGardens(q);
+  }
+
+  function normalizeSearchValue(value) {
+    return (value || "").toLowerCase().trim().replace(/\s+/g, " ");
+  }
+
+  function updateSearchUi(query, visible, total) {
+    const searchActionButton = document.getElementById("search-action-btn");
+    const feedback = document.getElementById("search-feedback");
+    const noResults = document.getElementById("no-results");
+
+    if (searchActionButton) {
+      const hasQuery = Boolean(query);
+      searchActionButton.classList.toggle("is-clear", hasQuery);
+      searchActionButton.disabled = !hasQuery;
+      searchActionButton.textContent = hasQuery ? "X" : "";
+      searchActionButton.setAttribute(
+        "aria-label",
+        hasQuery ? "Clear search" : "Search",
+      );
+    }
+
+    if (feedback) {
+      if (!total) {
+        feedback.textContent = "";
+      } else if (!query) {
+        feedback.textContent = `${total} gardens`;
+      } else {
+        feedback.textContent = `${visible} of ${total} gardens shown`;
+      }
+    }
+
+    if (noResults) {
+      noResults.classList.toggle("hidden", !(query && total > 0 && visible === 0));
+    }
+  }
+
+  function scheduleSearchFilter() {
+    if (searchDebounceTimer) {
+      clearTimeout(searchDebounceTimer);
+    }
+
+    searchDebounceTimer = setTimeout(() => {
+      window.requestAnimationFrame(() => {
+        filterGardens();
+      });
+    }, SEARCH_DEBOUNCE_MS);
   }
 
   function setupModalClose(modalId) {
@@ -130,8 +201,9 @@
 
     currentEditGardenId = selected.garden_id;
     imageInput.value = "";
+    setGardenPreviewImage(imageInput, selected.image_path);
     nameInput.value = selected.garden_name || "";
-    modal.style.display = "block";
+    modal.style.display = "flex";
   }
 
   async function saveEditedGarden() {
@@ -185,7 +257,29 @@
 
   function openSortModal() {
     const sortModal = document.getElementById("sort-modal");
-    if (sortModal) sortModal.style.display = "block";
+    const sortButton = document.querySelector(".sort-btn");
+    if (!sortModal || !sortButton) return;
+
+    if (sortModal.classList.contains("open")) {
+      sortModal.classList.remove("open");
+      return;
+    }
+
+    const buttonRect = sortButton.getBoundingClientRect();
+    const menuWidth = Math.min(300, Math.floor(window.innerWidth * 0.86));
+    const left = Math.min(
+      Math.max(10, buttonRect.left),
+      Math.max(10, window.innerWidth - menuWidth - 10),
+    );
+
+    sortModal.style.left = `${left}px`;
+    sortModal.style.top = `${buttonRect.bottom + 8}px`;
+    sortModal.classList.add("open");
+  }
+
+  function closeSortModal() {
+    const sortModal = document.getElementById("sort-modal");
+    if (sortModal) sortModal.classList.remove("open");
   }
 
   async function fileToDataUrl(file) {
@@ -221,8 +315,7 @@
       );
     }
 
-    const sortModal = document.getElementById("sort-modal");
-    if (sortModal) sortModal.style.display = "none";
+    closeSortModal();
     renderGardens();
   }
 
@@ -248,16 +341,35 @@
       return;
     }
 
-    if (event.target.id === "sort-name-asc-btn") sortGardens("nameAsc");
-    else if (event.target.id === "sort-name-desc-btn") sortGardens("nameDesc");
-    else if (event.target.id === "sort-date-newest-btn") sortGardens("dateAsc");
-    else if (event.target.id === "sort-date-oldest-btn")
+    if (event.target.id === "sort-name-asc-btn") {
+      sortGardens("nameAsc");
+      return;
+    } else if (event.target.id === "sort-name-desc-btn") {
+      sortGardens("nameDesc");
+      return;
+    } else if (event.target.id === "sort-date-newest-btn") {
+      sortGardens("dateAsc");
+      return;
+    } else if (event.target.id === "sort-date-oldest-btn") {
       sortGardens("dateDesc");
+      return;
+    }
+
+    const sortModal = document.getElementById("sort-modal");
+    if (
+      sortModal?.classList.contains("open") &&
+      !event.target.closest("#sort-modal") &&
+      !event.target.closest(".sort-btn")
+    ) {
+      closeSortModal();
+    }
   });
 
-  function filterGardens() {
+  function filterGardens(queryOverride) {
     const input = document.getElementById("search-input");
-    const query = (input?.value || "").toLowerCase().trim();
+    const query = normalizeSearchValue(
+      queryOverride !== undefined ? queryOverride : input?.value,
+    );
 
     const items = document.querySelectorAll("#garden-list .garden-item");
     let visible = 0;
@@ -271,23 +383,65 @@
       if (show) visible++;
     });
 
+    updateSearchUi(query, visible, items.length);
+
     console.log("filterGardens:", { query, total: items.length, visible });
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
     setupModalClose("myModal");
-    setupModalClose("sort-modal");
 
     const saveButton = document.getElementById("save-image-btn");
     if (saveButton) saveButton.addEventListener("click", saveEditedGarden);
 
+    const imageInput = document.getElementById("garden-image");
+    if (imageInput) {
+      imageInput.addEventListener("change", () => {
+        const selectedFile = imageInput.files?.[0];
+        if (!selectedFile) {
+          const currentGarden = gardensCache.find(
+            (g) => String(g.garden_id) === String(currentEditGardenId),
+          );
+          setGardenPreviewImage(imageInput, currentGarden?.image_path);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setGardenPreviewImage(imageInput, event.target?.result);
+        };
+        reader.readAsDataURL(selectedFile);
+      });
+    }
+
     const searchInput = document.getElementById("search-input");
     if (searchInput) {
       searchInput.value = "";
-      searchInput.addEventListener("input", filterGardens);
+      searchInput.addEventListener("input", scheduleSearchFilter);
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          searchInput.value = "";
+          filterGardens("");
+        }
+      });
+    }
+
+    const searchActionButton = document.getElementById("search-action-btn");
+    if (searchActionButton && searchInput) {
+      searchActionButton.addEventListener("click", () => {
+        if (searchActionButton.disabled) {
+          return;
+        }
+
+        searchInput.value = "";
+        searchInput.focus();
+        filterGardens("");
+      });
     }
 
     gardensCache = await fetchGardens();
     await renderGardens();
   });
+
+  window.addEventListener("resize", closeSortModal);
 })();

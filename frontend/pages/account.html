@@ -38,8 +38,8 @@
     <div id="edit-modal" class="edit-modal">
       <div class="edit-modal-content">
         <div class="edit-modal-header">
-          <span class="close">&times;</span>
           <h2>Edit Account Information</h2>
+          <span class="close">&times;</span>
         </div>
         <div class="edit-modal-body">
           <input
@@ -47,7 +47,9 @@
             accept=".jpg, .png, image/*"
             id="edit-profile-picture"
             class="edit-profile-picture"
+            aria-label="Edit profile picture"
           />
+          <p class="edit-photo-hint">Tap image to change profile picture</p>
           <label for="edit-age">Age Group:</label>
           <select id="edit-age" name="edit-age">
             <option value="">Select age group</option>

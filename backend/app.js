@@ -19,7 +19,8 @@ app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, '..', 'frontend'))); // Serve static files from the frontend
-app.use(express.json()); // Adds middleware to parse JSON request bodies
+app.use(express.json({ limit: '10mb' })); // Allow larger payloads for image data URLs
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(session({
     store: new SQLiteStore({ db: 'sessions.db', dir: 'data/sessions' }),
@@ -49,6 +50,17 @@ app.use('/gardens', gardenRoute);
 
 const notificationsRoute = require('./routes/notifications');
 app.use('/notifications', notificationsRoute);
+
+// Return a clear JSON error when payload exceeds configured limit.
+app.use((error, request, response, next) => {
+    if (error?.type === 'entity.too.large') {
+        return response.status(413).json({
+            message: 'Image is too large. Please upload a smaller image.'
+        });
+    }
+
+    return next(error);
+});
 
 // 404 handler
 app.use((request, response) => {
