@@ -125,6 +125,12 @@ body {
   cursor: pointer;
   display: inline-block;
   border: none;
+  transition: filter 0.2s ease;
+}
+
+.bottom-navbar-btn:hover {
+  filter: brightness(1.03);
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
 }
 
 .fixed-bar-bottom .bottom-navbar-btn:nth-child(1) {
@@ -156,6 +162,14 @@ body {
   position: relative;
   overflow: hidden;
   margin-bottom: 14px;
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.1));
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
+}
+
+.garden-item:hover {
+  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.15));
 }
 
 /* Add a border around the garden item using a pseudo-element */
@@ -200,8 +214,8 @@ body {
 }
 
 .edit-btn {
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   background-size: contain;
   background-repeat: no-repeat;
@@ -211,7 +225,7 @@ body {
   cursor: pointer;
   position: absolute;
   top: 8px;
-  right: 46px;
+  right: 40px;
   z-index: 4;
 }
 

@@ -1,5 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications</title>
+    <link rel="stylesheet" href="../styles/notifications.css" />
+  </head>
 
 <head>
   <meta charset="UTF-8" />
@@ -18,13 +24,18 @@
       <input type="text" placeholder="Search..." class="search-input" id="search-input">
       <img src="../assets/images/search.png" alt="search-icon" class="search-icon">
     </div>
-    <div class="notifications-list">
-      <div class="notifications-header">
-        <img src="../assets/images/notifications.png" alt="notifications" class="notifications-icon">
-        <div class="notifications-total">
-          <h2>Notifications</h2>
-          <h3 id="notifications-num">(num) new notifications</h3>
-        </div>
+    <div class="container">
+      <div class="mini-nav">
+        <img
+          src="../assets/images/back.png"
+          alt="back-arrow"
+          class="back-arrow"
+        />
+        <img
+          src="../assets/images/search.png"
+          alt="search-icon"
+          class="search-icon"
+        />
       </div>
       <template id = "notification-template">
         <div class="garden-notifications">
@@ -36,7 +47,26 @@
             <p id="n-time">2 hours ago</p>
           </div>
         </div>
-      </template>
+        <template id="notification-template">
+          <div class="garden-notifications">
+            <h2 id="garden-name">X Garden</h2>
+            <div class="notification-content">
+              <input
+                type="checkbox"
+                id="notification"
+                name="notification-checkbox"
+                value="notification-checkbox"
+              />
+              <label for="notification" id="notificationlabel"
+                >Water Tomato Plant</label
+              >
+              <div class="n-priority" id="n-priority">High</div>
+              <p id="n-description">Needs watering today</p>
+              <p id="n-time">2 hours ago</p>
+            </div>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 
