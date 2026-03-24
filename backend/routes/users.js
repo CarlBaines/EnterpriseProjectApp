@@ -171,7 +171,7 @@ router.post("/login", (request, response) => {
   }
 
   request.session.regenerate((err) => {
-    if(err){
+    if (err) {
       return response.status(500).json({
         exists: false,
         message: "Session Regeneration Error",
@@ -182,7 +182,7 @@ router.post("/login", (request, response) => {
     request.session.userId = user.user_id;
     request.session.username = user.username;
     request.session.save((err) => {
-      if(err){
+      if (err) {
         return response.status(500).json({
           exists: false,
           message: "Session Save Error",
@@ -198,6 +198,86 @@ router.post("/login", (request, response) => {
 
     console.log("Session after login:", request.session);
   });
+});
+
+router.post("/mhrating", (request, response) => {
+  const { mhrating } = request.body;
+  const userId = request.session.userId;
+  if (mhrating === undefined || mhrating === null) {
+    return response.status(404).json({
+      success: false,
+      message: "Mental health rating is required!",
+    });
+  }
+
+  if (typeof mhrating !== "number" || mhrating < 1 || mhrating > 5) {
+    return response.status(400).json({
+      success: false,
+      message: "Mental health rating must be a number between 1 and 5!",
+    });
+  }
+
+  const updateMHRating = db.prepare(`UPDATE users SET mental_health_rating = ? WHERE user_id = ?`);
+  try {
+    const updatedUser = updateMHRating.run(mhrating, userId);
+    if (updatedUser.changes === 0) {
+      return response.status(404).json({
+        success: false,
+        message: "User not found to update mental health rating for!",
+      });
+    }
+    return response.status(200).json({
+      success: true,
+      message: "Mental health rating stored successfully!",
+    });
+  }
+  catch (err) {
+    return response.status(500).json({
+      success: false,
+      message: "Error occurred when attempting to store mental health rating in the database.",
+      error: err.message
+    });
+  }
+});
+
+router.post("/mhjournalentry", (request, response) => {
+  const { mhJournalEntry } = request.body;
+  const userId = request.session.userId;
+  if (mhJournalEntry === undefined || mhJournalEntry === null) {
+    return response.status(404).json({
+      success: false,
+      message: "Mental health journal entry is required!"
+    });
+  }
+
+  if (typeof mhJournalEntry !== "string" || mhJournalEntry.trim() === "") {
+    return response.status(400).json({
+      success: false,
+      message: "Mental health journal entry must be a non-empty string!"
+    });
+  }
+
+  const updateMHJournalEntry = db.prepare(`UPDATE users SET mh_journal_entry = ? WHERE user_id = ?`);
+  try {
+    const updatedUser = updateMHJournalEntry.run(mhJournalEntry, userId);
+    if (updatedUser.changes === 0) {
+      return response.status(404).json({
+        success: false,
+        message: "User not found to update mental health journal entry for!"
+      });
+    }
+    return response.status(200).json({
+      success: true,
+      message: "Mental health journal entry stored successfully!"
+    });
+  }
+  catch (err) {
+    return response.status(500).json({
+      success: false,
+      message: "Error occurred when attempting to store mental health journal entry in the database.",
+      error: err.message
+    });
+  }
 });
 
 router.post("/signup", (request, response) => {

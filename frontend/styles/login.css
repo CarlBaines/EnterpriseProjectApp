@@ -25,7 +25,7 @@ body {
 
 .container .logo {
     width: var(--app-icon-size);
-    height: var(--app-icon-size);
+    height: auto;
 }
 
 .container h1 {
@@ -58,7 +58,9 @@ input {
 }
 
 #login-btn,
-#dm-nav-btn {
+#dm-nav-btn,
+#mh-submit-btn,
+#journal-submit-btn {
     display: block;
     margin: 0px auto;
     background-color: #013220;
@@ -83,23 +85,7 @@ input {
     color: #89CFF0;
 }
 
-#dynamic-modal{
-    display: none;
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-}
-
-#dynamic-modal .dynamic-modal-content{
-    background-color: #FDF9EC;
-    padding: 24px 48px 24px 48px;
-    border-radius: 25px;
-}
-
-#dynamic-modal .dynamic-modal-content img.logo{
+.dynamic-modal-content img.logo{
     width: var(--app-icon-size);
     display: block;
     margin: 0 auto 16px;
@@ -112,8 +98,121 @@ input {
     text-align: center;
 }
 
-#dynamic-modal-message{
+#dynamic-modal{
     color: black;
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+#dynamic-modal .dynamic-modal-content{
+    width: min(400px, 92vw);
+    box-sizing: border-box;
+    background-color: #FDF9EC;
+    padding: 24px 48px 24px 48px;
+    border-radius: 25px;
+}
+
+#dynamic-modal-message{
     font-weight: 400;
     text-align: center;
+}
+
+#mental-health-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;         
+    flex-direction: column;   
+    justify-content: center;
+    align-items: center;
+}
+
+#mental-health-modal .mental-health-modal-content{
+    background-color: #FDF9EC;
+    padding: 24px 48px 24px 48px;
+    border-radius: 25px;
+    width: min(400px, 92vw);  
+    box-sizing: border-box;   
+}
+
+#mental-health-modal img.logo{
+    width: var(--app-icon-size);
+    display: none;
+    margin: 0 auto 16px;
+}
+
+#mh-modal-title{
+    color: black;
+    text-shadow: none;
+    font-weight: 700;
+    text-align: center;
+}
+
+#mh-submit-btn{
+    margin-top: 15px;
+}
+
+#mental-health-modal .mh-scale-img {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  margin: 12px auto 16px;
+  object-fit: contain;
+}
+
+#mh-form,
+#journal-entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#journal-entry-form {
+  display: none; 
+}
+
+#journal-entry {
+  border-radius: 20px;
+  color: var(--text-color);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 20px;
+  min-height: 180px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: white; 
+}
+
+@media (max-width: 420px) {
+  #dynamic-modal .dynamic-modal-content,
+  #mental-health-modal .mental-health-modal-content {
+    padding: 18px 22px;
+  }
+
+  #dynamic-modal-title,
+  #mh-modal-title {
+    font-size: 20px;
+  }
+
+  #dynamic-modal-message,
+  #mental-health-modal label,
+  #mental-health-modal input,
+  #journal-entry {
+    font-size: 14px;
+  }
+
+  #login-btn,
+  #dm-nav-btn,
+  #mh-submit-btn,
+  #journal-submit-btn {
+    font-size: 14px;
+    padding: 8px 26px;
+  }
 }
