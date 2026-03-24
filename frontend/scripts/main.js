@@ -16,7 +16,7 @@ if (!app.isPackaged) {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 360,
+    width: 1360,
     height: 800,
     resizable: false,
     maximizable: false,
@@ -28,7 +28,7 @@ function createWindow() {
       contextIsolation: true,
     },
   });
-//win.webContents.openDevTools();
+win.webContents.openDevTools();
   // win.setMenu(null);
   win.loadURL("http://127.0.0.1:3002/pages/index.html"); // Load the homepage from the backend server
   return win;
