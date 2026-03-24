@@ -15,6 +15,10 @@ db.exec(`
     )   
 `);
 
+// db.exec(`ALTER TABLE users ADD COLUMN profile_image TEXT NULL`);
+// db.exec(`ALTER TABLE users ADD COLUMN age_group TEXT NULL`);
+// db.exec(`ALTER TABLE users ADD COLUMN gender TEXT NULL`);
+
 // Drop users table if needed
 // db.exec(`DROP TABLE users`);
 
@@ -50,6 +54,8 @@ db.exec(`
     )
 `);
 
+
+
 // const exampleNotifications = db.prepare(`INSERT INTO notifications (user_id, garden_id, title, description, priority, time) VALUES (?, ?, ?, ?, ?, ?)`);
 // exampleNotifications.run(1, 1, "Watering Reminder", "Your tomato plants need watering today!", "High", "2024-06-01 09:00:00");
 // exampleNotifications.run(1, 2, "Fertiliser Alert", "Time to fertilise your rose bushes.", "Medium", "2024-06-02 10:00:00");
@@ -62,7 +68,7 @@ const selectUsers = db.prepare(`SELECT * FROM users`).all();
 console.log("Current users in the database:", selectUsers);
 
 const selectGardens = db.prepare(`SELECT garden_id, user_id, garden_name, image_path FROM gardens`).all();
-console.log("Current gardens in the database:", selectGardens);
+console.log("Current gardens in the database:", selectGardens.map(g => ({ garden_id: g.garden_id, user_id: g.user_id, garden_name: g.garden_name })));
 
 const selectNotifications = db.prepare(`SELECT * FROM notifications`).all();
 console.log("Current notifications in the database:", selectNotifications);

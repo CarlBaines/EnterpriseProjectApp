@@ -7,6 +7,7 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 // Import crypto for recovery key generation
 const crypto = require("crypto");
+const requireLogin = require("../middleware/auth");
 
 function routeHealthCheck(routeName) {
   return (request, response) => {
@@ -66,22 +67,39 @@ router.get("/all", (request, response) => {
   }
 });
 
-router.get("/me", (request, response) => {
-  if(!request.session.userId){
-    return response.status(401).json({
+router.get("/me", requireLogin, (request, response) => {
+  try {
+    const user = db
+      .prepare(
+        `SELECT user_id, username, profile_image, age_group, gender FROM users WHERE user_id = ?`,
+      )
+      .get(request.session.userId);
+
+    if (!user) {
+      return response.status(404).json({
+        loggedIn: false,
+        message: "User record not found.",
+        userId: null,
+        username: null,
+      });
+    }
+
+    return response.status(200).json({
+      loggedIn: true,
+      message: "User is logged in.",
+      userId: user.user_id,
+      username: user.username,
+      profileImage: user.profile_image || null,
+      ageGroup: user.age_group || null,
+      gender: user.gender || null,
+    });
+  } catch (err) {
+    return response.status(500).json({
       loggedIn: false,
-      message: "User is not logged in.",
-      userId: null,
-      username: null
+      message: "Failed to fetch user details.",
+      error: err.message,
     });
   }
-
-  return response.status(200).json({
-    loggedIn: true,
-    message: "User is logged in.",
-    userId: request.session.userId,
-    username: request.session.username || null
-  });
 });
 
 
@@ -410,6 +428,81 @@ router.post("/recoverykeycheck", (request, response) => {
     return response.status(500).json({
       valid: false,
       message: "Error occurred when checking recovery key in the database.",
+      error: err.message,
+    });
+  }
+});
+
+router.put("/updateaccountinformation", requireLogin, (request, response) => {
+  const userId = request.session.userId;
+  const {
+    newProfileImage,
+    newAgeGroup,
+    newGender,
+    profileImage,
+    ageGroup,
+    gender,
+  } = request.body;
+
+  const profileImageToSave =
+    newProfileImage !== undefined ? newProfileImage : profileImage;
+  const ageGroupToSave = newAgeGroup !== undefined ? newAgeGroup : ageGroup;
+  const genderToSave = newGender !== undefined ? newGender : gender;
+
+  const fields = [];
+  const values = [];
+
+  if (profileImageToSave !== undefined) {
+    fields.push("profile_image = ?");
+    values.push(profileImageToSave);
+  }
+  if (ageGroupToSave !== undefined) {
+    fields.push("age_group = ?");
+    values.push(ageGroupToSave);
+  }
+  if (genderToSave !== undefined) {
+    fields.push("gender = ?");
+    values.push(genderToSave);
+  }
+
+  if (fields.length === 0) {
+    return response.status(400).json({
+      success: false,
+      message: "No account fields were provided to update.",
+    });
+  }
+
+  values.push(userId);
+
+  try {
+    const updateAccountInformation = db.prepare(
+      `UPDATE users SET ${fields.join(", ")} WHERE user_id = ?`,
+    );
+
+    updateAccountInformation.run(...values);
+
+    const user = db
+      .prepare(
+        `SELECT user_id, username, profile_image, age_group, gender FROM users WHERE user_id = ?`,
+      )
+      .get(userId);
+
+    return response.status(200).json({
+      success: true,
+      message: "Account information updated successfully!",
+      user: {
+        userId: user.user_id,
+        username: user.username,
+        profileImage: user.profile_image || null,
+        ageGroup: user.age_group || null,
+        gender: user.gender || null,
+      },
+    });
+  } catch (err) {
+    return response.status(500).json({
+      success: false,
+      message:
+        "Error occurred when attempting to update account information in the database.",
       error: err.message,
     });
   }
