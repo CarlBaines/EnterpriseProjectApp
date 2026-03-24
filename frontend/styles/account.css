@@ -54,6 +54,7 @@ body {
   cursor: pointer;
   display: inline-block;
   border: none;
+  filter: drop-shadow(0px 0px 1.5px rgba(0, 0, 0, 0.4));
 }
 
 .edit-btn {
@@ -69,6 +70,7 @@ body {
   top: 60%;
   transform: translateY(-50%);
   right: 90px;
+  filter: drop-shadow(0px 0px 1.5px rgba(0, 0, 0, 0.4));
 }
 
 .app {
