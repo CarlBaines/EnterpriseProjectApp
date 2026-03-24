@@ -74,57 +74,82 @@ body {
 .app {
   padding: 16px;
   padding-top: 130px;
-  padding-bottom: 60px;
+  padding-bottom: 108px;
   align-items: center;
   text-align: center;
 }
 
 .fixed-bar-bottom {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
+  left: 50%;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(540px, calc(100% - 22px));
+  height: 72px;
+  padding: 8px;
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
   z-index: 1000;
-  background-color: var(--primary-color);
-  color: white;
-  border-top: #78967e 3px solid;
+  background: linear-gradient(180deg, #7ebc89 0%, #6dac79 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 22px;
+  box-shadow:
+    0 10px 26px rgba(33, 47, 36, 0.26),
+    0 2px 8px rgba(33, 47, 36, 0.2);
+  backdrop-filter: blur(8px);
 }
 
 .bottom-navbar-btn {
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 15px;
   padding: 0;
   cursor: pointer;
-  display: inline-block;
+  display: grid;
+  place-items: center;
   border: none;
+  background-size: auto calc(100% - 8px);
+  background-repeat: no-repeat;
+  background-position: center;
+  transition:
+    background-color 0.2s ease,
+    transform 0.12s ease;
+}
+
+.bottom-navbar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.bottom-navbar-btn:active {
+  transform: translateY(1px);
 }
 
 .fixed-bar-bottom .bottom-navbar-btn:nth-child(1) {
-  justify-self: start;
   background: transparent url("../assets/images/user.png") center/contain
     no-repeat;
-  margin-left: 16px;
+  background-position: center;
+  background-size: auto calc(100% - 8px);
 }
 .fixed-bar-bottom .bottom-navbar-btn:nth-child(2) {
-  justify-self: center;
   background: transparent url("../assets/images/add.png") center/contain
     no-repeat;
+  background-position: center;
+  background-size: auto calc(100% - 8px);
 }
 .fixed-bar-bottom .bottom-navbar-btn:nth-child(3) {
-  justify-self: end;
   background: transparent url("../assets/images/settings.png") center/contain
     no-repeat;
-  margin-right: 16px;
+  background-position: center;
+  background-size: auto calc(100% - 8px);
 }
 
 .profile-picture {
   width: 180px;
   height: 180px;
-  border: none;
+  border: 6px solid #d1dad2;
   border-radius: 50%;
   display: block;
   margin: 0 auto;
@@ -326,6 +351,18 @@ body {
 }
 
 @media (max-width: 480px) {
+  .fixed-bar-bottom {
+    height: 68px;
+    width: calc(100% - 14px);
+    border-radius: 18px;
+    padding: 6px;
+  }
+
+  .bottom-navbar-btn {
+    background-size: auto calc(100% - 6px);
+    background-position: center;
+  }
+
   .edit-modal {
     padding: 12px;
   }
