@@ -108,6 +108,21 @@ body {
   cursor: pointer;
 }
 
+.add-garden-notice {
+  min-height: 1.25em;
+  margin: 12px 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.add-garden-notice.error {
+  color: #9b3e2f;
+}
+
+.add-garden-notice.success {
+  color: #2f6e3c;
+}
+
 .modal {
   display: none;
   position: fixed;
