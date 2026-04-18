@@ -13,7 +13,7 @@ body {
   font-size: var(--base-font-size);
 }
 
-.header-1 {
+.header {
   position: fixed;
   z-index: 100;
   top: 0px;
@@ -45,7 +45,7 @@ body {
   height: 4px;
 }
 
-.notifications {
+.notifications-text {
   position: relative;
   z-index: 1;
   font-size: 13px;
@@ -69,6 +69,81 @@ body {
   left: 19px;
   width: 322px;
   height: 52px;
+}
+
+.notifications-switch {
+  position: relative;
+  display: inline-block;
+  left: 152px;
+  width: 50px;
+  height: 21px;
+}
+
+.notifications-switch input {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+
+.notifications-slider {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  top: 1px;
+  left: 8px;
+  width: 97%;
+  height: 95%;
+  transition: background-color 0.3s;
+}
+
+.notifications-slider::before {
+  position: absolute;
+  content: "";
+  top: 2px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+  background-color: #D9D9D9;
+  border-radius: 100%;
+  transition: transform 0.3s;
+}
+
+.notifications-off-on::before {
+  position: absolute;
+  Content: "Off";
+  pointer-events: none;
+  top: 3px;
+  left: -15px;
+  transition: transform 0.3s;
+}
+
+.notifications-switch-outer-box {
+  position: absolute;
+  cursor: pointer;
+  background-color: #CECECE;
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  transition: background-color 0.3s;
+}
+
+.notifications-switch input:checked + .notifications-slider {
+  background-color: #78EA8D;
+}
+
+.notifications-switch input:checked + .notifications-slider::before,
+.notifications-switch input:checked ~ .notifications-switch-outer-box {
+  background-color: #6AC87B;
+}
+
+.notifications-switch input:checked + .notifications-slider::before {
+  transform: translateX(27px);
+}
+
+.notifications-switch input:checked ~ .notifications-off-on::before {
+  content: "On";
 }
 
 .colour-theme {
@@ -97,7 +172,7 @@ body {
   height: 52px;
 }
 
-.large-text {
+.large-text-text {
   position: relative;
   z-index: 1;
   font-size: 13px;
@@ -123,7 +198,83 @@ body {
   height: 52px;
 }
 
-.large-icons {
+.large-text-switch {
+  position: relative;
+  display: inline-block;
+  top: 0px;
+  left: 163px;
+  width: 50px;
+  height: 21px;
+}
+
+.large-text-switch input {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+
+.large-text-slider {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  top: 1px;
+  left: 8px;
+  width: 96%;
+  height: 95%;
+  transition: background-color 0.3s;
+}
+
+.large-text-slider::before {
+  position: absolute;
+  content: "";
+  top: 2px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+  background-color: #D9D9D9;
+  border-radius: 100%;
+  transition: transform 0.3s;
+}
+
+.large-text-off-on::before {
+  position: absolute;
+  Content: "Off";
+  pointer-events: none;
+  top: 3px;
+  left: -15px;
+  transition: transform 0.3s;
+}
+
+.large-text-switch-outer-box {
+  position: absolute;
+  cursor: pointer;
+  background-color: #CECECE;
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  transition: background-color 0.3s;
+}
+
+.large-text-switch input:checked + .large-text-slider {
+  background-color: #78EA8D;
+}
+
+.large-text-switch input:checked + .large-text-slider::before,
+.large-text-switch input:checked ~ .large-text-switch-outer-box {
+  background-color: #6AC87B;
+}
+
+.large-text-switch input:checked + .large-text-slider::before {
+  transform: translateX(27px);
+}
+
+.large-text-switch input:checked ~ .large-text-off-on::before {
+  content: "On";
+}
+
+.large-icons-text {
   position: relative;
   z-index: 1;
   font-size: 13px;
@@ -147,6 +298,81 @@ body {
   left: 19px;
   width: 322px;
   height: 52px;
+}
+
+.large-icons-switch {
+  position: relative;
+  display: inline-block;
+  left: 155px;
+  width: 50px;
+  height: 21px;
+}
+
+.large-icons-switch input {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+
+.large-icons-slider {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  top: 1px;
+  left: 8px;
+  width: 97%;
+  height: 95%;
+  transition: background-color 0.3s;
+}
+
+.large-icons-slider::before {
+  position: absolute;
+  content: "";
+  top: 2px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+  background-color: #D9D9D9;
+  border-radius: 100%;
+  transition: transform 0.3s;
+}
+
+.large-icons-off-on::before {
+  position: absolute;
+  Content: "Off";
+  pointer-events: none;
+  top: 3px;
+  left: -15px;
+  transition: transform 0.3s;
+}
+
+.large-icons-switch-outer-box {
+  position: absolute;
+  cursor: pointer;
+  background-color: #CECECE;
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  transition: background-color 0.3s;
+}
+
+.large-icons-switch input:checked + .large-icons-slider {
+  background-color: #78EA8D;
+}
+
+.large-icons-switch input:checked + .large-icons-slider::before,
+.large-icons-switch input:checked ~ .large-icons-switch-outer-box {
+  background-color: #6AC87B;
+}
+
+.large-icons-switch input:checked + .large-icons-slider::before {
+  transform: translateX(27px);
+}
+
+.large-icons-switch input:checked ~ .large-icons-off-on::before {
+  content: "On";
 }
 
 .recovery-key {
@@ -255,86 +481,3 @@ body {
   width: 100%;
   height: 60px;
 }
-
-/* .fixed-bar-bottom {
-  position: fixed;
-  left: 50%;
-  bottom: max(10px, env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  width: min(540px, calc(100% - 22px));
-  height: 72px;
-  padding: 8px;
-  box-sizing: border-box;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
-  z-index: 1000;
-  background: linear-gradient(180deg, #7ebc89 0%, #6dac79 100%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 22px;
-  box-shadow:
-    0 10px 26px rgba(33, 47, 36, 0.26),
-    0 2px 8px rgba(33, 47, 36, 0.2);
-  backdrop-filter: blur(8px);
-}
-
-.bottom-navbar-btn {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  border-radius: 15px;
-  padding: 0;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  border: none;
-  background-size: auto calc(100% - 8px);
-  background-repeat: no-repeat;
-  background-position: center;
-  transition:
-    background-color 0.2s ease,
-    transform 0.12s ease;
-}
-
-.bottom-navbar-btn:hover {
-  background-color: rgba(255, 255, 255, 0.16);
-}
-
-.bottom-navbar-btn:active {
-  transform: translateY(1px);
-}
-
-.fixed-bar-bottom .bottom-navbar-btn:nth-child(1) {
-  background: transparent url("../assets/images/user.png") center/contain
-    no-repeat;
-  background-position: center;
-  background-size: auto calc(100% - 8px);
-}
-
-.fixed-bar-bottom .bottom-navbar-btn:nth-child(2) {
-  background: transparent url("../assets/images/add.png") center/contain
-    no-repeat;
-  background-position: center;
-  background-size: auto calc(100% - 8px);
-}
-
-.fixed-bar-bottom .bottom-navbar-btn:nth-child(3) {
-  background: transparent url("../assets/images/settings.png") center/contain
-    no-repeat;
-  background-position: center;
-  background-size: auto calc(100% - 8px);
-}
-
-@media (max-width: 480px) {
-  .fixed-bar-bottom {
-    height: 68px;
-    width: calc(100% - 14px);
-    border-radius: 18px;
-    padding: 6px;
-  }
-
-  .bottom-navbar-btn {
-    background-size: auto calc(100% - 6px);
-    background-position: center;
-  }
-} */
