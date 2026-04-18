@@ -328,19 +328,32 @@ router.post("/signup", (request, response) => {
       error: err.message,
     });
   }
+
+  // Generate a salt and hash the password
+  const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(13));
+
+  // Generate recovery key and store it hashed in the database.
+  const LENGTH = 25;
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const bytes = crypto.randomBytes(LENGTH);
+  const recoveryKey = Array.from(bytes)
+    .map((byte) => chars[byte % chars.length])
+    .join("");
+
+  const recoveryKeyHash = bcrypt.hashSync(recoveryKey, bcrypt.genSaltSync(13));
+
   // Hash the password and insert the new user into the database
   const insertRegisteredUser = db.prepare(
-    `INSERT INTO users (username, password_hash) VALUES (?, ?)`,
+    `INSERT INTO users (username, password_hash, recovery_key) VALUES (?, ?, ?)`,
   );
-  // Generate a salt and hash the password
-  const salt = bcrypt.genSaltSync(13);
-  const passwordHash = bcrypt.hashSync(password, salt);
   // Try, catch block to insert new user.
   try {
-    insertRegisteredUser.run(username, passwordHash);
+    insertRegisteredUser.run(username, passwordHash, recoveryKeyHash);
     return response.status(201).json({
       success: true,
       message: "User registered successfully!",
+      recoveryKey: recoveryKey, // Return the unhashed recovery key to the frontend to show to the user, but only at the moment of account creation.
     });
   } catch (err) {
     return response.status(500).json({
@@ -430,55 +443,6 @@ router.post("/forgotpasswordusernamecheck", (request, response) => {
   }
 });
 
-// Route which posts a recovery key to the database for a user
-router.post("/recoverykey", (request, response) => {
-  const { username } = request.body;
-  if (!username) {
-    return response.status(404).json({
-      success: false,
-      message: "Username is required to generate and store recovery key.",
-    });
-  }
-
-  // Generate a 25-character random recovery key
-  const LENGTH = 25;
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  const bytes = crypto.randomBytes(LENGTH);
-  const recoveryKey = Array.from(bytes)
-    .map((byte) => chars[byte % chars.length])
-    .join("");
-  // REMOVE THIS IN PRODUCTION FOR SECURITY PURPOSES
-  // console.log("Generated recovery key:", recoveryKey);
-
-  const postRecoveryKey = db.prepare(
-    `UPDATE users SET recovery_key = ? WHERE username = ?`,
-  );
-  try {
-    const updatedUser = postRecoveryKey.run(recoveryKey, username);
-    // If changes is 0, then no user was found with the provided username to update the recovery key for.
-    if (updatedUser.changes === 0) {
-      return response.status(404).json({
-        success: false,
-        message: "Username not found to store recovery key.",
-      });
-    }
-    return response.status(200).json({
-      success: true,
-      message: "Recovery key generated and stored successfully!",
-      recoveryKey: recoveryKey,
-    });
-  } catch (err) {
-    return response.status(500).json({
-      success: false,
-      message:
-        "Error occurred when attempting to store recovery key in the database.",
-      error: err.message,
-    });
-  }
-});
-
 router.post("/recoverykeycheck", (request, response) => {
   const { username, recoveryKey } = request.body;
   if (!username || !recoveryKey) {
@@ -488,22 +452,45 @@ router.post("/recoverykeycheck", (request, response) => {
     });
   }
 
-  const recoveryKeyCheck = db.prepare(
-    `SELECT * FROM users WHERE username = ? AND recovery_key = ?`,
-  );
+  const selectRecoveryKey = db.prepare(`
+    SELECT recovery_key FROM users WHERE username = ?
+  `);
+
   try {
-    const recoveryKeyValid = recoveryKeyCheck.get(username, recoveryKey);
-    if (recoveryKeyValid) {
-      return response.status(200).json({
-        valid: true,
-        message: "Recovery key is valid!",
-      });
-    } else {
+    const user = selectRecoveryKey.get(username);
+    if(!user){
       return response.status(404).json({
         valid: false,
-        message: "Invalid recovery key or username.",
+        message: "Invalid recovery key or username!",
       });
     }
+
+    if(!user.recovery_key){
+      return response.status(400).json({
+        valid: false,
+        message: "No recovery key is set for this account!",
+      });
+    }
+
+    // Hashed key handling + fallback for older plaintext keys.
+    const stored = user.recovery_key;
+    const bcryptLikeness = typeof stored === "string" && stored.startsWith("$2");
+    const isValid = bcryptLikeness
+      ? bcrypt.compareSync(recoveryKey, stored)
+      : recoveryKey === stored;
+
+    if(!isValid){
+      return response.status(404).json({
+        valid: false,
+        message: "Invalid recovery key or username!",
+      });
+    }
+
+    return response.status(200).json({
+      valid: true,
+      message: "Recovery key is valid for the associated username!",
+    });
+
   } catch (err) {
     return response.status(500).json({
       valid: false,
@@ -589,18 +576,34 @@ router.put("/updateaccountinformation", requireLogin, (request, response) => {
 });
 
 router.post("/forgotpassword", (request, response) => {
-  const { username, confirmPassword } = request.body;
-  if (!username || !confirmPassword) {
+  const { username, recoveryKey, confirmPassword } = request.body;
+  if (!username || !recoveryKey || !confirmPassword) {
     return response.status(404).json({
       success: false,
-      message: "Confirmed new password is required to reset password.",
+      message: "Username, recovery key and confirm password is required for password reset.",
+    });
+  }
+
+  if (typeof username !== "string" || typeof recoveryKey !== "string" || typeof confirmPassword !== "string") {
+    return response.status(400).json({
+      success: false,
+      message: "Username, recovery key and confirm password must be strings for password reset.",
+    });
+  }
+
+  // Check for password length requirements upon password reset
+  if(confirmPassword.length < 12 || confirmPassword.length > 64){
+    return response.status(400).json({
+      success: false,
+      message: "Confirm password must be between 12 characters and 64 characters long.",
     });
   }
 
   // Fetch the current password hash of the user first
   const selectUser = db.prepare(
-    `SELECT password_hash FROM users WHERE username = ?`,
+    `SELECT password_hash, recovery_key FROM users WHERE username = ?`,
   );
+
   let user;
   try {
     user = selectUser.get(username);
@@ -614,11 +617,33 @@ router.post("/forgotpassword", (request, response) => {
     return response.status(500).json({
       success: false,
       message:
-        "Error occurred when checking for existing username to reset password for.",
+        "Error occurred when loading user for password reset.",
       error: err.message,
     });
   }
 
+  if(!user.recovery_key){
+    return response.status(400).json({
+      success: false,
+      message: "No recovery key is set for this account, cannot reset password with recovery key.",
+    });
+  }
+
+  // Hashed key handling + fallback for older plaintext keys.
+  const stored = user.recovery_key;
+  const looksLikeBcrypt = typeof stored === "string" && stored.startsWith("$2");
+  const recoveryOk = looksLikeBcrypt
+    ? bcrypt.compareSync(recoveryKey, stored)
+    : recoveryKey === stored;
+
+  if (!recoveryOk) {
+    return response.status(401).json({
+      success: false,
+      message: "Invalid recovery key or username.",
+    });
+  }
+
+  // Check for a matching password hash to prevent password reuse.
   const passwordMatch = bcrypt.compareSync(confirmPassword, user.password_hash);
   if (passwordMatch) {
     return response.status(400).json({
@@ -633,7 +658,7 @@ router.post("/forgotpassword", (request, response) => {
 
   // recovery_key = NULL
   const updatePassword = db.prepare(
-    `UPDATE users SET password_hash = ? WHERE username = ?`,
+    `UPDATE users SET password_hash = ?, recovery_key = NULL WHERE username = ?`,
   );
   try {
     const updatedUser = updatePassword.run(passwordHash, username);

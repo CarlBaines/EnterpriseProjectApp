@@ -13,7 +13,7 @@ var dynamicModalMessage = document.getElementById('dynamic-modal-message');
 var dynamicModalBtn = document.getElementById('dm-nav-btn');
 
 let modalState = null;
-let pendingRecoveryUsername = null;
+let pendingRecoveryKey = null;
 let showRecoveryAfterDynamic = false;
 
 // Functions
@@ -29,7 +29,7 @@ async function validateForm() {
     }
 
     // Check if username is between 3 and 32 characters long
-    if (username.length <= 3 && username.length >= 32) {
+    if (username.length < 3 || username.length > 32) {
         // alert('Username must be at least 3 characters long');
         modalState = 'u2';
         await determineModalContent(modalState)
@@ -46,7 +46,15 @@ async function validateForm() {
             body: JSON.stringify({ username })
         });
 
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
+
+        if (response.status === 409 || data.exists === true) {
+            modalState = 'u4';
+            await determineModalContent(modalState);
+            await clearModalInputs();
+            return false;
+        }
+
         if (!response.ok) {
             // alert("Error occurred when checking username: " + data.message);
             console.log("Error occurred during username check:", data.message);
@@ -84,7 +92,7 @@ async function validateForm() {
         return false;
     }
 
-    if (password.length <= 12 && password.length >= 64) {
+    if (password.length < 12 || password.length > 64) {
         // alert('Password must be at least 12 characters long');
         modalState = 'p2';
         await determineModalContent(modalState);
@@ -119,67 +127,42 @@ async function saveUser(username, password) {
             }),
         });
 
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
 
-        if (response.ok && data.success) {
-            // 1) Show success modal first
-            pendingRecoveryUsername = username;
-            showRecoveryAfterDynamic = true;
-
-            modalState = 'success';
+        if (response.status === 409 || data.exists === true) {
+            modalState = 'u4';
             await determineModalContent(modalState);
-            return;
-        } else {
-            console.log("Error occurred during signup:", data.error);
-            // On error, just show the error modal (no recovery modal)
-            showRecoveryAfterDynamic = false;
-            pendingRecoveryUsername = null;
-
-            modalState = 'su';
-            await determineModalContent(modalState);
+            await clearModalInputs();
             return;
         }
+
+        if (!response.ok) {
+            // alert("Error occurred when checking username: " + data.message);
+            console.log("Error occurred during username check:", data.message);
+            modalState = 'u3';
+            await determineModalContent(modalState);
+            await clearModalInputs();
+            return false;
+        }
+
+        if (data.success) {
+            pendingRecoveryKey = data.recoveryKey || null;
+            showRecoveryAfterDynamic = true;
+            await determineModalContent('success');
+            return;
+        }
+
+        // everything else = generic signup error
+        modalState = 'su';
+        await determineModalContent(modalState);
     }
     catch (error) {
         console.log("Backend error during signup:", error);
         showRecoveryAfterDynamic = false;
-        pendingRecoveryUsername = null;
 
         modalState = 'su';
         await determineModalContent(modalState);
         return;
-    }
-}
-
-async function displayRecoveryKeyModal(username) {
-    // console.log("Attempting to fetch recovery key for username:", username);
-    // Fetch the recovery key from the backend and display it in the modal
-    try {
-        const response = await fetch('/users/recoverykey', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username: username })
-        });
-
-        const data = await response.json();
-        if (response.ok && data.success) {
-            // Add the recovery key to the modal content
-            recoveryKeyDisplay.textContent = data.recoveryKey;
-            // Hide the sign up container
-            signUpContainer.style.display = 'none';
-            // Display the recovery key modal
-            recoveryKeyModal.style.display = 'flex';
-            return;
-        }
-
-        alert("Error occurred when fetching recovery key: " + data.message);
-        console.log("Error occurred when fetching recovery key:", data.error);
-    }
-    catch (error) {
-        alert("A backend error occurred when fetching recovery key: " + error.message);
-        console.log("Backend error when fetching recovery key:", error);
     }
 }
 
@@ -276,16 +259,23 @@ async function determineModalContent(description) {
             dynamicModalBtn.onclick = async () => {
                 dynamicModal.style.display = "none";
 
-                // 2) Then show recovery key modal
-                if (showRecoveryAfterDynamic && pendingRecoveryUsername) {
-                    await displayRecoveryKeyModal(pendingRecoveryUsername);
+                // Show recovery key modal
+                if (showRecoveryAfterDynamic && pendingRecoveryKey) {
+                    recoveryKeyDisplay.textContent = pendingRecoveryKey;
+                    signUpContainer.style.display = 'none';
+                    recoveryKeyModal.style.display = 'flex';
+                } else {
+                    // fallback - shows a generic error modal
+                    modalState = 'su';
+                    await determineModalContent(modalState);
                 }
-            };
+
+            }
             break;
     }
 }
 
-async function clearModalInputs(){
+async function clearModalInputs() {
     usernameInput.value = '';
     // passwordInput.value = '';
     confirmPasswordInput.value = '';
