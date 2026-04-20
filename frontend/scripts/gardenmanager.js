@@ -43,7 +43,7 @@ function selectCollage(name, element) {
 // Open file picker
 addImageBtn.addEventListener("click", () => {
   if (!currentCollage) {
-    alert("Create a collage first");
+    alert("Create a new collage first");
     return;
   }
   fileInput.click();
