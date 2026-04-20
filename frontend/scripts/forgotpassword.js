@@ -112,6 +112,12 @@ async function submitNewPassword() {
         return;
     }
 
+    if(password.length < 12 || password.length > 64){
+        modalState = 'np3';
+        await determineModalContent(modalState);
+        return;
+    }
+
     if(password !== confirmPassword){
         // alert("Passwords do not match. Please ensure both password fields match.");
         modalState = 'np2';
@@ -124,10 +130,10 @@ async function submitNewPassword() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ username: username, confirmPassword: confirmPassword })
+        body: JSON.stringify({ username: username, recoveryKey: recoveryKeyInput.value.trim(), confirmPassword: confirmPassword })
     })
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if(response.ok && data.success){
         // alert("Password reset successful! You can now log in with your new password.");
@@ -208,6 +214,17 @@ async function determineModalContent(description){
         case 'np2':
             dynamicModalTitle.textContent = "Password Mismatch";
             dynamicModalMessage.textContent = "Passwords do not match! Please ensure both password fields match.";
+            dynamicModalBtn.textContent = "OK";
+            dynamicModalBtn.onclick = () => {
+                dynamicModal.style.display = "none";
+                newPasswordInput.value = '';
+                confirmNewPasswordInput.value = '';
+                forgotPasswordContainer.style.display = "flex";
+            };
+            break;
+        case 'np3':
+            dynamicModalTitle.textContent = "Invalid Password";
+            dynamicModalMessage.textContent = "Password must be between 12 and 64 characters in length! Please enter a valid password.";
             dynamicModalBtn.textContent = "OK";
             dynamicModalBtn.onclick = () => {
                 dynamicModal.style.display = "none";

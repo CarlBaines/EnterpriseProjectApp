@@ -37,18 +37,16 @@
   }
 
   async function fetchGardens() {
-    const response = await fetch(
-      `/gardens/user/user_id`, {
-        method: "GET",
-        credentials: "include"
-      }
-    );
-    const data = await response.json();
+    const response = await fetch(`/gardens/user/user_id`, {
+      method: "GET",
+      credentials: "include",
+    });
 
-    if (!response.ok)
-      throw new Error(
-        data?.error || data?.message || "Failed to fetch gardens",
-      );
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data?.message || "Failed to fetch gardens");
+    }
 
     const raw = Array.isArray(data?.gardens)
       ? data.gardens
@@ -173,7 +171,7 @@
       `/gardens/delete/${gardenId}`,
       {
         method: "DELETE",
-        credentials: "include"
+        credentials: "include",
       },
     );
     const data = await response.json();
@@ -191,6 +189,7 @@
     const modal = document.getElementById("myModal");
     const imageInput = document.getElementById("garden-image");
     const nameInput = document.getElementById("garden-name-input");
+    nameInput.setCustomValidity("");
     if (!modal || !imageInput || !nameInput) return;
 
     const selected = gardensCache.find(
@@ -235,10 +234,23 @@
       },
     );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      throw new Error(data?.message || "Failed to update garden");
+      const message = data?.message || "Failed to update garden";
+
+      if (response.status === 409) {
+        nameInput.setCustomValidity(message);
+        nameInput.reportValidity();
+        nameInput.focus();
+        return;
+      }
+
+      throw new Error(message);
     }
+
+    // clear any previous error if success
+    nameInput.setCustomValidity("");
 
     gardensCache = gardensCache.map((g) =>
       String(g.garden_id) === String(currentEditGardenId)

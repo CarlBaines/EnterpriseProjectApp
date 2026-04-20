@@ -12,6 +12,37 @@ async function getCurrentUser() {
   return data;
 }
 
+let noticeResetTimer = null;
+
+function showAddGardenNotice(message, tone = "error") {
+  const form = document.getElementById("add-garden-form");
+  if (!form) {
+    return;
+  }
+
+  let notice = document.getElementById("add-garden-notice");
+  if (!notice) {
+    notice = document.createElement("p");
+    notice.id = "add-garden-notice";
+    notice.setAttribute("aria-live", "polite");
+    form.appendChild(notice);
+  }
+
+  notice.className = `add-garden-notice ${tone}`;
+  notice.textContent = message;
+
+  if (noticeResetTimer) {
+    clearTimeout(noticeResetTimer);
+  }
+
+  noticeResetTimer = setTimeout(() => {
+    if (notice) {
+      notice.textContent = "";
+      notice.className = "add-garden-notice";
+    }
+  }, 2400);
+}
+
 async function saveGarden(event) {
   if (event) {
     event.preventDefault();
@@ -21,12 +52,14 @@ async function saveGarden(event) {
   const imageInput = document.getElementById("garden-image");
 
   if (!nameInput.value) {
-    alert("Please enter a name for your garden.");
+    showAddGardenNotice("Please enter a name for your garden.");
+    nameInput.focus();
     return;
   }
 
   if (!imageInput.value) {
-    alert("Please select an image for your garden.");
+    showAddGardenNotice("Please select an image for your garden.");
+    imageInput.focus();
     return;
   }
 
@@ -53,12 +86,12 @@ async function saveGarden(event) {
 
     if (!response.ok) {
       // Show exact backend/db error to simplify debugging.
-      alert("Error saving garden: " + (data.error || data.message || "Unknown error"));
+      showAddGardenNotice("Error saving garden: " + (data.error || data.message || "Unknown error"));
       console.error("Add garden failed:", data);
       return;
     }
   } catch (error) {
-    alert("Backend error: " + error.message);
+    showAddGardenNotice("Backend error: " + error.message);
     return;
   }
 
@@ -76,7 +109,7 @@ if (imageInput) {
         imageInput.style.backgroundSize = "cover";
         imageInput.style.backgroundPosition = "center";
       };
-      alert("Image selected: " + imageInput.value);
+      showAddGardenNotice("Image selected.", "success");
       reader.readAsDataURL(file);
     }
   });

@@ -181,6 +181,12 @@ router.put("/update/:garden_id", requireLogin, (request, response) => {
       message: "Garden updated successfully!",
     });
   } catch (err) {
+    if (err?.code === "SQLITE_CONSTRAINT_UNIQUE" || String(err?.message).includes("UNIQUE constraint failed")) {
+      return response.status(409).json({
+        message: "A garden already exists with that name. Please choose a different name.",
+      });
+    }
+
     return response.status(500).json({
       message: "Error updating garden in the database.",
       error: err.message,

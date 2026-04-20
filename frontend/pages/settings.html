@@ -7,31 +7,80 @@
     <link rel="stylesheet" href="../styles/settings.css" />
   </head>
   <body>
-    <div class="fixed-bar-top">
-      <h1>Settings</h1>
+    <div id="top-bar-container">
+      <div class="header">
+        <h1>Settings</h1>
+      </div>
+      <div class="back-arrow">
+        <a href="homepage.html">
+        <img src="../assets\images/white_back_arrow.png" alt="A white back arrow button." width="30px">
+        </a>
+      </div>
+      <div class="top-secondary-bar"></div>
     </div>
-    <div class="app">
-      <button onclick="window.location.href = 'homepage.html'">
-        Back to Main Page
-      </button>
+    <div id="notifications-container">
+      <div class="notifications-text">
+        <p>Notifications</p>  
+        <label class="notifications-switch">
+          <input type="checkbox">         
+          <span class="notifications-slider"></span>
+          <span class="notifications-off-on"></span>
+          <span class="notifications-switch-outer-box"></span>
+        </label>
+      </div>
+      <div class="notifications-outer-box"></div>
     </div>
-
-    <div class="fixed-bar-bottom">
-      <button
-        class="bottom-navbar-btn"
-        aria-label="Account"
-        onclick="window.location.href = 'account.html'"
-      ></button>
-      <button
-        class="bottom-navbar-btn"
-        aria-label="Add"
-        onclick="window.location.href = 'addgarden.html'"
-      ></button>
-      <button
-        class="bottom-navbar-btn"
-        aria-label="Settings"
-        onclick="window.location.href = 'settings.html'"
-      ></button>
+    <div id="colour-theme-container">
+      <div class="colour-theme">
+        <p>Colour Theme</p>
+      </div>
+      <div class="colour-theme-outer-box"></div>
+    </div>
+    <div id="large-text-container">
+      <div class="large-text-text">
+        <p>Large Text</p>
+        <label class="large-text-switch">
+          <input type="checkbox">
+          <span class="large-text-slider"></span>
+          <span class="large-text-off-on"></span>
+          <span class="large-text-switch-outer-box"></span>
+        </label>
+      </div>
+      <div class="large-text-outer-box"></div>
+    </div>
+    <div id="large-icons-container">
+      <div class="large-icons-text">
+        <p>Large Icons</p>
+        <label class="large-icons-switch">
+          <input type="checkbox">
+          <span class="large-icons-slider"></span>
+          <span class="large-icons-off-on"></span>
+          <span class="large-icons-switch-outer-box"></span>
+        </label>
+      </div>
+      <div class="large-icons-outer-box"></div>
+    </div>
+    <div id="recovery-key-container">
+      <div class="recovery-key">
+        <p>Tap to Reveal Recovery Key</p>
+      </div>
+      <div class="recovery-key-outer-box"></div>
+    </div>
+    <div id="change-password-container">
+      <div class="change-password">
+        <a href="forgotpassword.html">Change Password</a>
+      </div>
+      <div class="change-password-outer-box"></div>
+    </div>
+    <div id="about-container">
+      <div class="about">
+        <p>About</p>
+      </div>
+      <div class="about-outer-box"></div>
+    </div>
+    <div id="bottom-bar-container">
+      <div class="bottom-secondary-bar"></div>
+      <div class="bottom-primary-bar"></div>
     </div>
   </body>
 </html>
