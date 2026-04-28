@@ -79,6 +79,24 @@ router.get("/user/:username", requireLogin, (request, response) => {
   }
 });
 
+router.get("/gardeninfo/:garden_id", requireLogin, (request, response) => {
+  const { garden_id } = request.params;
+  const selectGardenInfo = db.prepare(`SELECT garden_info FROM gardens WHERE garden_id = ?`);
+  try {
+    const garden = selectGardenInfo.get(garden_id);
+    if(!garden){
+      return response.status(404).json({
+        message: "Garden not found with the provided garden_id.",
+      });
+    }
+  }
+  catch(err){
+    return response.status(500).json({
+      message: "Error retrieving garden info from the database.",
+      error: err.message,
+    });
+  }
+});
 
 router.post("/add", requireLogin, (request, response) => {
   try {
@@ -189,6 +207,50 @@ router.put("/update/:garden_id", requireLogin, (request, response) => {
 
     return response.status(500).json({
       message: "Error updating garden in the database.",
+      error: err.message,
+    });
+  }
+});
+
+// Route that updates the garden_info field for a specific garden_id
+router.put("/update/gardeninfo", requireLogin, (request, response) => {
+  const { garden_id, garden_info } = request.body;
+  const userId = request.session.userId;
+  if(!garden_id || !garden_info) {
+    return response.status(400).json({
+      success: false,
+      message: "Missing required fields. Both garden_id and garden_info are required."
+    });
+  }
+
+  const gardenExistsCheck = db.prepare(`SELECT * FROM gardens WHERE garden_id = ? AND user_id = ?`);
+  try {
+    const existingGarden = gardenExistsCheck.get(garden_id, userId);
+    if(!existingGarden){
+      return response.status(404).json({
+        success: false,
+        message: "Garden not found with the provided garden_id for the current user."
+      });
+    }
+    const updateGardenInfo = db.prepare(`UPDATE gardens SET garden_info = ? WHERE garden_id = ?`);
+    try{
+      updateGardenInfo.run(garden_info, garden_id);
+      return response.status(200).json({
+        success: false,
+        message: "Garden info updated successfully!"
+      });
+    }
+    catch(err){
+      return response.status(500).json({
+        success: false,
+        message: "Error updating garden info in the database.",
+        error: err.message,
+      });
+    }
+  } catch (err){
+    return response.status(500).json({
+      success: false,
+      message: "Error checking for existing garden in the database.",
       error: err.message,
     });
   }

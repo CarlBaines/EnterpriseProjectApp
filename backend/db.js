@@ -13,6 +13,7 @@ db.exec(`
         recovery_key TEXT NULL,
         mental_health_rating INTEGER NULL,
         mh_journal_entry TEXT NULL,
+        garden_info TEXT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
     )   
 `);
@@ -22,6 +23,7 @@ db.exec(`
 // db.exec(`ALTER TABLE users ADD COLUMN gender TEXT NULL`);
 // db.exec(`ALTER TABLE users ADD COLUMN mental_health_rating INTEGER NULL`);
 // db.exec(`ALTER TABLE users ADD COLUMN mh_journal_entry TEXT NULL`);
+// db.exec(`ALTER TABLE users ADD COLUMN garden_info TEXT NULL`);
 
 // Drop users table if needed
 // db.exec(`DROP TABLE users`);
