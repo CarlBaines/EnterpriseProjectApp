@@ -9,6 +9,7 @@ const bottomPanel = document.getElementById("bottomPanel");
 let collages = {};
 let currentCollage = null;
 let collageCount = 0;
+let selectedPlant = null;
 
 // Create new collage
 newCollageBtn.addEventListener("click", () => {
@@ -57,11 +58,14 @@ fileInput.addEventListener("change", (e) => {
   const url = URL.createObjectURL(file);
 
   const imgData = {
-    src: url,
-    name: file.name,
-    x: 50,
-    y: 50
-  };
+  src: url,
+  name: file.name,
+  x: 50,
+  y: 50,
+  age: 0,          // in days
+  disease: "none", // default
+  createdAt: Date.now() // helps auto age tracking
+};
 
   collages[currentCollage].push(imgData);
   renderCollage();
@@ -81,9 +85,9 @@ function renderCollage() {
     img.style.left = imgData.x + "px";
     img.style.top = imgData.y + "px";
 
-    // Click to show filename
     img.addEventListener("click", () => {
-      bottomPanel.innerText = imgData.name;
+    selectedPlant = imgData;
+    renderBottomPanel();
     });
 
     makeDraggable(img, imgData);
@@ -91,6 +95,60 @@ function renderCollage() {
     mainPanel.appendChild(img);
   });
 }
+
+// NEW AI SHIT I DONT KNOW ABOUT 
+
+
+function renderBottomPanel() {
+  if (!selectedPlant) {
+    bottomPanel.innerText = "No image selected";
+    return;
+  }
+
+  bottomPanel.innerHTML = `
+    <span><strong>${selectedPlant.name}</strong></span>
+    &nbsp; | Age (days):
+    <input type="number" id="ageInput" value="${selectedPlant.age}" min="0" style="width:60px;">
+    &nbsp; | Disease:
+    <select id="diseaseSelect">
+      <option value="none" ${selectedPlant.disease === "none" ? "selected" : ""}>None</option>
+      <option value="fungus" ${selectedPlant.disease === "fungus" ? "selected" : ""}>Fungus</option>
+    </select>
+  `;
+
+  // Hook up events
+  document.getElementById("ageInput").addEventListener("input", (e) => {
+    selectedPlant.age = parseInt(e.target.value) || 0;
+  });
+
+  document.getElementById("diseaseSelect").addEventListener("change", (e) => {
+    selectedPlant.disease = e.target.value;
+  });
+}
+
+
+
+
+function updatePlantAges() {
+  const now = Date.now();
+
+  Object.values(collages).forEach(collage => {
+    collage.forEach(plant => {
+      const days = Math.floor((now - plant.createdAt) / (1000 * 60 * 60 * 24));
+      plant.age = days;
+    });
+  });
+}
+
+
+
+
+
+
+// NEW AI SHIT I DONT KNOW ABOUT 
+
+
+
 
 // Drag logic
 function makeDraggable(element, data) {
@@ -123,3 +181,10 @@ function makeDraggable(element, data) {
     element.style.cursor = "grab";
   });
 }
+
+
+
+setInterval(() => {
+  updatePlantAges();
+  if (selectedPlant) renderBottomPanel();
+}, 60000); // update every minute
