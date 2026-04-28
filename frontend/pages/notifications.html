@@ -1,94 +1,66 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notifications</title>
-    <link rel="stylesheet" href="../styles/notifications.css" />
-  </head>
 
-  <body>
-    <div class="fixed-bar-top">
-      <h1>Notifications</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications</title>
+  <link rel="stylesheet" href="../styles/notifications.css" />
+</head>
+
+<body>
+  <div class="fixed-bar-top">
+    <h1>Notifications</h1>
+  </div>
+
+  <div class="container">
+    <div class="mini-nav">
+      <img src="../assets/images/back.png" alt="back-arrow" class="back-arrow" />
+      <input type="text" placeholder="Search..." class="search-input" id="search-input" />
+      <img src="../assets/images/search.png" alt="search-icon" class="search-icon" />
     </div>
 
-    <div class="container">
-      <div class="mini-nav">
-        <img
-          src="../assets/images/back.png"
-          alt="back-arrow"
-          class="back-arrow"
-        />
-        <input
-          type="text"
-          placeholder="Search..."
-          class="search-input"
-          id="search-input"
-        />
-        <img
-          src="../assets/images/search.png"
-          alt="search-icon"
-          class="search-icon"
-        />
+    <div class="notifications-list">
+      <div class="notifications-header">
+        <img src="../assets/images/notifications.png" alt="notifications" class="notifications-icon" />
+        <div class="notifications-total">
+          <h2>Notifications</h2>
+          <h3 id="notifications-num">(num) new notifications</h3>
+        </div>
       </div>
 
-      <div class="notifications-list">
-        <div class="notifications-header">
-          <img
-            src="../assets/images/notifications.png"
-            alt="notifications"
-            class="notifications-icon"
-          />
-          <div class="notifications-total">
-            <h2>Notifications</h2>
-            <h3 id="notifications-num">(num) new notifications</h3>
+      <template id="notification-template">
+        <div class="garden-notifications">
+          <div class="notification-content">
+            <img class="notifications-placeholder" id="notifications-placeholder">  
+            <div class="notification-title-row">
+              <input type="checkbox" id="notification" name="notification-checkbox" value="notification-checkbox" />
+              <label for="notification" id="notificationlabel">Water Tomato Plant</label>
+            </div>
+            <div class="n-priority" id="n-priority">High</div>
+            <p id="n-description">Needs watering today</p>
+            <p id="n-time">2 hours ago</p>
           </div>
         </div>
+      </template>
+    </div>
+  </div>
 
-        <template id="notification-template">
-          <div class="garden-notifications">
-            <div class="notification-content">
-              <input
-                type="checkbox"
-                id="notification"
-                name="notification-checkbox"
-                value="notification-checkbox"
-              />
-              <label for="notification" id="notificationlabel"
-                >Water Tomato Plant</label
-              >
-              <div class="n-priority" id="n-priority">High</div>
-              <p id="n-description">Needs watering today</p>
-              <p id="n-time">2 hours ago</p>
-            </div>
-          </div>
-        </template>
-      </div>
-    </div>
+  <div id="actions-footer" class="actions-footer">
+    <button type="submit" class="mark-as-read-btn" id="mark-as-read-btn">
+      Mark all as read
+    </button>
+    <button type="submit" class="clear-btn" id="clear-btn">Clear all</button>
+  </div>
+  <div class="fixed-bar-bottom">
+    <button class="bottom-navbar-btn account-icon" aria-label="Account"
+      onclick="window.location.href = 'account.html'"></button>
+    <button class="bottom-navbar-btn add-icon" aria-label="Add"
+      onclick="window.location.href = 'addgarden.html'"></button>
+    <button class="bottom-navbar-btn settings-icon" aria-label="Settings"
+      onclick="window.location.href = 'settings.html'"></button>
+  </div>
+  <script src="../scripts/notifications.js"></script>
+</body>
 
-    <div id="actions-footer" class="actions-footer">
-      <button type="submit" class="mark-as-read-btn" id="mark-as-read-btn">
-        Mark all as read
-      </button>
-      <button type="submit" class="clear-btn" id="clear-btn">Clear all</button>
-    </div>
-    <div class="fixed-bar-bottom">
-      <button
-        class="bottom-navbar-btn account-icon"
-        aria-label="Account"
-        onclick="window.location.href = 'account.html'"
-      ></button>
-      <button
-        class="bottom-navbar-btn add-icon"
-        aria-label="Add"
-        onclick="window.location.href = 'addgarden.html'"
-      ></button>
-      <button
-        class="bottom-navbar-btn settings-icon"
-        aria-label="Settings"
-        onclick="window.location.href = 'settings.html'"
-      ></button>
-    </div>
-    <script src="../scripts/notifications.js"></script>
-  </body>
 </html>

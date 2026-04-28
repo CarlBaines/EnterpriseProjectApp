@@ -8,7 +8,6 @@ const loginBtn = document.getElementById("login-btn");7
 const mentalHealthModal = document.getElementById("mental-health-modal");
 const mhModalTitle = document.getElementById("mh-modal-title");
 const mhScaleImg = document.getElementById("mh-scale-img");
-const mhRatingInput = document.getElementById("mh-rating");
 const mhRatingSubmitBtn = document.getElementById("mh-submit-btn");
 
 const dynamicModal = document.getElementById("dynamic-modal");
@@ -17,9 +16,13 @@ const dynamicModalMessage = document.getElementById("dynamic-modal-message");
 const dynamicModalBtn = document.getElementById("dm-nav-btn");
 
 const mhForm = document.getElementById("mh-form");
+const mhSlider = document.getElementById("mh-slider");
+const mhSliderRatingEl = document.getElementById("mh-selected-rating");
+
 const journalEntryForm = document.getElementById("journal-entry-form");
 const journalEntryInput = document.getElementById("journal-entry");
 const journalEntrySubmitBtn = document.getElementById("journal-submit-btn");
+
 
 let modalState = null;
 
@@ -97,6 +100,13 @@ function determineModalContent(description) {
     case "mh":
       dynamicModal.style.display = "none";
       mentalHealthModal.style.display = "flex";
+
+      mhForm.style.display = "flex";
+      mhScaleImg.style.display = "block";
+      journalEntryForm.style.display = "none";
+      mhModalTitle.textContent = "How are you feeling today?";
+
+      updateSliderRating();
       break;
     case "valid_mh":
       dynamicModalTitle.textContent = "Mental Health Rating Recorded!";
@@ -161,11 +171,10 @@ function determineModalContent(description) {
 }
 
 async function storeMentalHealthRating() {
-  const rating = Number(mhRatingInput.value);
+  const rating = Number(mhSlider.value);
 
   if (isNaN(rating) || rating < 1 || rating > 5) {
     determineModalContent("invalid_mh");
-    mhRatingInput.value = "";
     return;
   }
 
@@ -192,6 +201,16 @@ async function storeMentalHealthRating() {
 
 async function storeJournalEntry(){
   const journalEntry = journalEntryInput.value.trim();
+
+  if(journalEntry === ""){
+    journalEntryInput.value = "";
+    mentalHealthModal.style.display = "none";
+    dynamicModal.style.display = "none";
+    loginContainer.style.display = "none";
+    window.location.href = "homepage.html";
+    return;
+  }
+
   // Sets a reasonable character limit for journal entries (e.g. 65535 characters for TEXT in SQLite)
   if (journalEntry.length > 65535) {
     alert("Journal entry is too long. Please limit to 65535 characters.");
@@ -223,6 +242,18 @@ function displayJournalEntryModal() {
   appLogo.style.display = "block";
   mhModalTitle.textContent = "Would you like to make a journal entry?";
   journalEntryForm.style.display = "flex";
+}
+
+function updateSliderRating() {
+  if (!mhSlider || !mhSliderRatingEl) return;
+
+  const rating = Number(mhSlider.value);
+  mhSliderRatingEl.textContent = `Selected rating: ${rating}`;
+}
+
+if (mhSlider) {
+  mhSlider.addEventListener("input", updateSliderRating);
+  updateSliderRating();
 }
 
 if (loginBtn) {

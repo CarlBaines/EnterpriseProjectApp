@@ -18,8 +18,8 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 360,
     height: 800,
-    resizable: false,
-    maximizable: false,
+    resizable: true,
+    maximizable: true,
     fullscreenable: false,
     useContentSize: true,
     frame: true,

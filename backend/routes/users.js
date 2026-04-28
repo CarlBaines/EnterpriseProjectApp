@@ -243,19 +243,6 @@ router.post("/mhrating", (request, response) => {
 router.post("/mhjournalentry", (request, response) => {
   const { mhJournalEntry } = request.body;
   const userId = request.session.userId;
-  if (mhJournalEntry === undefined || mhJournalEntry === null) {
-    return response.status(404).json({
-      success: false,
-      message: "Mental health journal entry is required!"
-    });
-  }
-
-  if (typeof mhJournalEntry !== "string" || mhJournalEntry.trim() === "") {
-    return response.status(400).json({
-      success: false,
-      message: "Mental health journal entry must be a non-empty string!"
-    });
-  }
 
   const updateMHJournalEntry = db.prepare(`UPDATE users SET mh_journal_entry = ? WHERE user_id = ?`);
   try {
