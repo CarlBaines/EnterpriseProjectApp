@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Collage</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #topBar {
+      padding: 10px;
+      background: #333;
+      color: white;
+    }
+
+    #topBar button {
+      margin-right: 10px;
+    }
+
+    #container {
+      display: flex;
+      flex: 1;
+    }
+
+    #leftPanel {
+      width: 200px;
+      background: #f0f0f0;
+      border-right: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    #mainPanel {
+      flex: 1;
+      position: relative;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    #bottomPanel {
+      height: 40px;
+      background: #222;
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .collage-item {
+      padding: 5px;
+      cursor: pointer;
+      background: #ddd;
+      margin-bottom: 5px;
+    }
+
+    .collage-item.active {
+      background: #bbb;
+    }
+
+    .draggable-img {
+      position: absolute;
+      width: 120px;
+      cursor: grab;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="topBar">
+    <button id="addImageBtn">Add Image</button>
+    <button id="newCollageBtn">New Collage</button>
+    <input type="file" id="fileInput" style="display:none" accept="image/*">
+  </div>
+
+  <div id="container">
+    <div id="leftPanel"></div>
+    <div id="mainPanel"></div>
+  </div>
+
+  <div id="bottomPanel">No image selected</div>
+
+  <script src="../scripts/gardenmanager.js"></script>
+</body>
+</html>
