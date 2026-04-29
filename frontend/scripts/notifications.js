@@ -23,7 +23,7 @@ async function displayNotifications() {
     });
 
     const data = await response.json();
-    if(!response.ok){
+    if (!response.ok) {
         console.error(data);
         return;
     }
@@ -35,6 +35,9 @@ async function displayNotifications() {
     // Render clone of template for each notification
     notifications.forEach((notification, index) => {
         const clone = template.content.cloneNode(true);
+
+        const imgEl = clone.querySelector('.notifications-placeholder');
+        changePlaceholderImg(notification.title, imgEl);
 
         const checkbox = clone.querySelector('input[type="checkbox"]');
         checkbox.addEventListener('change', updateActionsFooter);
@@ -56,7 +59,7 @@ async function displayNotifications() {
         decideNotificationPriorityStyle(notification.priority, priorityEl);
 
         clone.querySelector('#n-description').textContent = notification.description ?? "";
-        clone.querySelector('#n-time').textContent = notification.time ?? "";
+        clone.querySelector('#n-time').textContent = formatNotificationTime(notification);
 
         notificationsList.insertBefore(clone, template);
 
@@ -70,8 +73,8 @@ function updateActionsFooter() {
     actionsFooter.style.display = anyChecked ? "flex" : "none";
 }
 
-function decideNotificationPriorityStyle(notificationPriority, priorityEl){
-    switch(notificationPriority){
+function decideNotificationPriorityStyle(notificationPriority, priorityEl) {
+    switch (notificationPriority) {
         case "High":
             priorityEl.style.backgroundColor = "#F4CDC6";
             break;
@@ -84,7 +87,7 @@ function decideNotificationPriorityStyle(notificationPriority, priorityEl){
     }
 }
 
-function filterNotifications(){
+function filterNotifications() {
     const input = document.getElementById('search-input');
     const query = (input?.value || "").toLowerCase().trim();
     const items = document.querySelectorAll(
@@ -103,10 +106,27 @@ function filterNotifications(){
         const show = query === "" || searchableText.includes(query);
 
         item.style.display = show ? "" : "none";
-        if(show){
+        if (show) {
             visible++;
         }
     })
+}
+
+function changePlaceholderImg(notificationTitle, imgEl) {
+    if (!imgEl) return;
+    switch (notificationTitle) {
+        case "Watering Reminder":
+            imgEl.src = "../assets/images/watering-can.png";
+            imgEl.alt = "Watering Reminder";
+            break;
+        case "Fertiliser Alert":
+            imgEl.src = "../assets/images/fertiliser-icon.png";
+            imgEl.alt = "Fertiliser Alert";
+            break;
+        default:
+            imgEl.src = "../assets/images/user.png";
+            imgEl.alt = "Notifications Placeholder";
+    }
 }
 
 // Event listeners
@@ -154,12 +174,68 @@ if (clearBtn) {
     });
 }
 
+function formatTimeOnly(value) {
+    // matches "09:00:00" or "09:00"
+    const match = String(value).match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (!match) return null;
+
+    let hours = Number(match[1]);
+    const minutes = Number(match[2]);
+
+    const ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12 || 12;
+
+    // if you want "9am" instead of "9:00am" when minutes are 0:
+    return minutes === 0
+        ? `${hours}${ampm}`
+        : `${hours}:${String(minutes).padStart(2, "0")}${ampm}`;
+}
+
+function parseSqliteDateTime(value) {
+    // "2024-06-01 09:00:00"
+    const match = String(value).match(
+        /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/
+    );
+    if (!match) return null;
+
+    const [, y, mo, d, h, mi, s] = match.map(Number);
+    return new Date(y, mo - 1, d, h, mi, s || 0);
+}
+
+function formatDMYAndAmPm(date) {
+    const datePart = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12 || 12;
+
+    const timePart = minutes === 0
+        ? `${hours}${ampm}`
+        : `${hours}:${String(minutes).padStart(2, "0")}${ampm}`;
+
+    return `${datePart} ${timePart}`;
+}
+
+function formatNotificationTime(notification) {
+    // Prefer a full datetime if available:
+    const dt = parseSqliteDateTime(notification.created_at ?? notification.time);
+    if (dt) return formatDMYAndAmPm(dt);
+
+    // If it’s time-only like "09:00:00":
+    const t = formatTimeOnly(notification.time);
+    if (t) return t;
+
+    // Otherwise leave as-is ("2 hours ago", etc.)
+    return notification.time ?? "";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     displayNotifications();
     updateActionsFooter();
-
+    
     const searchBar = document.getElementById('search-input');
-    if(searchBar){
+    if (searchBar) {
         searchBar.value = "";
         searchBar.addEventListener('input', filterNotifications);
     }

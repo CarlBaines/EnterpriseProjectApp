@@ -90,7 +90,6 @@ body {
   box-shadow:
     0 10px 26px rgba(33, 47, 36, 0.26),
     0 2px 8px rgba(33, 47, 36, 0.2);
-  backdrop-filter: blur(8px);
 }
 
 .bottom-navbar-btn {
@@ -168,12 +167,47 @@ body {
 }
 
 .notification-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
   width: 100%;
   max-width: 300px;
   background-color: white;
   border-radius: 25px;
-  padding: 24px 12px 12px 24px;
   filter: drop-shadow(var(--drop-shadow));
+
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.notification-content #notifications-placeholder {
+  width: 50px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.notification-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.notification-title-row input[type="checkbox"] {
+  margin: 0; /* override your margin-bottom rule */
+}
+
+.notification-title-row label {
+  margin: 0;
+}
+
+.notification-content img{
+  width: 50px;
+  height: auto;
 }
 
 .notification-content input {
@@ -181,7 +215,7 @@ body {
 }
 
 .notification-content .n-priority {
-  width: 70%;
+  width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
   text-align: center;

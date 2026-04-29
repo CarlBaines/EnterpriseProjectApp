@@ -1,86 +1,69 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../styles/login.css" />
-    <title>Login</title>
-  </head>
 
-  <body>
-    <div class="container">
-      <img
-        src="../assets/images/final_app_logo.png"
-        alt="temp_logo"
-        class="logo"
-      />
-      <h1>Login</h1>
-      <div class="input-container">
-        <form>
-          <label for="username">Enter username</label><br />
-          <input
-            type="text"
-            id="username"
-            name="username"
-            required
-            minlength="3"
-            maxlength="32"
-          /><br />
-          <br />
-          <label for="password">Enter password</label><br />
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            minlength="12"
-            maxlength="64"
-          />
-          <a href="forgotpassword.html">
-            <p id="forgot-password-link">Forgot password?</p>
-          </a>
-          <button type="submit" id="login-btn">Login</button>
-        </form>
-      </div>
-      <div class="sign-up-container">
-        <p>Don't have an account?</p>
-        <a href="signup.html">
-          <p id="sign-up-link">Sign Up</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../styles/login.css" />
+  <title>Login</title>
+</head>
+
+<body>
+  <div class="container">
+    <img src="../assets/images/final_app_logo.png" alt="temp_logo" class="logo" />
+    <h1>Login</h1>
+    <div class="input-container">
+      <form>
+        <label for="username">Enter username</label><br />
+        <input type="text" id="username" name="username" required minlength="3" maxlength="32" /><br />
+        <br />
+        <label for="password">Enter password</label><br />
+        <input type="password" id="password" name="password" required minlength="12" maxlength="64" />
+        <a href="forgotpassword.html">
+          <p id="forgot-password-link">Forgot password?</p>
         </a>
-      </div>
+        <button type="submit" id="login-btn">Login</button>
+      </form>
     </div>
-
-    <div id="dynamic-modal" class="modal">
-      <div class="dynamic-modal-content">
-        <img
-          src="../assets/images/final_app_logo.png"
-          alt="temp-logo"
-          class="logo"
-        />
-        <h1 id="dynamic-modal-title">Title</h1>
-        <h2 id="dynamic-modal-message">Message</h2>
-        <button type="submit" id="dm-nav-btn">Continue</button>
-      </div>
+    <div class="sign-up-container">
+      <p>Don't have an account?</p>
+      <a href="signup.html">
+        <p id="sign-up-link">Sign Up</p>
+      </a>
     </div>
+  </div>
 
-    <div id="mental-health-modal" class="modal">
-      <img src="../assets/images/final_app_logo.png" alt="temp-logo" class="logo" id="app-logo" />
-      <div class="mental-health-modal-content">
-        <h1 id="mh-modal-title">How are you feeling today?</h1>
-        <img src="../assets/images/mh_scale.png" alt="mh-scale" class="mh-scale-img" id="mh-scale-img">
-        <form id = "mh-form">
-          <label for="mh-rating" id="mh-rating-label">Enter rating (1-5)</label>
-          <input type="number" placeholder="Enter rating (1-5)" min="1" max="5" id="mh-rating">
-          <button type="submit" id="mh-submit-btn">OK</button>
+  <div id="dynamic-modal" class="modal">
+    <div class="dynamic-modal-content">
+      <img src="../assets/images/final_app_logo.png" alt="temp-logo" class="logo" />
+      <h1 id="dynamic-modal-title">Title</h1>
+      <h2 id="dynamic-modal-message">Message</h2>
+      <button type="submit" id="dm-nav-btn">Continue</button>
+    </div>
+  </div>
+
+  <div id="mental-health-modal" class="modal">
+    <img src="../assets/images/final_app_logo.png" alt="temp-logo" class="logo" id="app-logo" />
+    <div class="mental-health-modal-content">
+      <h1 id="mh-modal-title">How are you feeling today?</h1>
+      <img src="../assets/images/mh_scale.png" alt="mh-scale" class="mh-scale-img" id="mh-scale-img">
+      <div class="slider-container">
+        <form id="mh-form">
+          <label for="mh-slider-label" id="mh-slider-label">Enter mental health rating (1-5)</label>
+          <p id="mh-selected-rating">Selected mental health rating:</p>
+          <input type="range" min="1" max="5" value="3" placeholder="Enter rating" class="slider" id="mh-slider">
+          <button type="submit" id="mh-submit-btn">Submit</button>
         </form>
-        <form id = "journal-entry-form">
-          <label for = "journal-entry">Make a journal entry (optional)</label>
-          <textarea id="journal-entry" placeholder="Write your thoughts here..."></textarea>
-          <button type="submit" id="journal-submit-btn">Submit Journal Entry</button>
-        </form>
       </div>
+      <form id="journal-entry-form">
+        <label for="journal-entry">Make a journal entry (optional)</label>
+        <textarea id="journal-entry" placeholder="Write your thoughts here..."></textarea>
+        <button type="submit" id="journal-submit-btn">Submit Journal Entry</button>
+      </form>
     </div>
+  </div>
 
-  </body>
-  <script src="../scripts/login.js"></script>
+</body>
+<script src="../scripts/login.js"></script>
+
 </html>
