@@ -399,6 +399,16 @@
     console.log("filterGardens:", { query, total: items.length, visible });
   }
 
+  document.addEventListener("click", (event) => {
+    const gardenItem = event.target.closest(".garden-item");
+    if (gardenItem && !event.target.closest(".edit-btn") && !event.target.closest(".delete-btn")) {
+      const gardenId = gardenItem.dataset.garden_id;
+      if (gardenId) {
+        window.location.href = `gardenmanager.html?garden_id=${gardenId}`;
+      }
+    }
+  });
+
   document.addEventListener("DOMContentLoaded", async () => {
     setupModalClose("myModal");
 
