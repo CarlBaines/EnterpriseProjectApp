@@ -8,12 +8,12 @@
   </head>
   <body>
     <div id="top-bar-container">
-      <div class="header">
+      <div class="header-text">
         <h1>Settings</h1>
       </div>
-      <div class="back-arrow">
+      <div class="back-arrow-button">
         <a href="homepage.html">
-        <img src="../assets\images/white_back_arrow.png" alt="A white back arrow button." width="30px">
+          <img src="../assets\images/white_back_arrow.png" alt="A white back arrow button." width="30px">
         </a>
       </div>
       <div class="top-secondary-bar"></div>
@@ -31,8 +31,13 @@
       <div class="notifications-outer-box"></div>
     </div>
     <div id="colour-theme-container">
-      <div class="colour-theme">
+      <div class="colour-theme-text">
         <p>Colour Theme</p>
+        <select>
+          <option value="light" selected>Light</option>
+          <option value="dark">Dark</option>
+          <option value="high-contrast">High Contrast</option>
+        </select>
       </div>
       <div class="colour-theme-outer-box"></div>
     </div>
@@ -61,20 +66,21 @@
       <div class="large-icons-outer-box"></div>
     </div>
     <div id="recovery-key-container">
-      <div class="recovery-key">
-        <p>Tap to Reveal Recovery Key</p>
-      </div>
+      <label class="recovery-key-checkbox">
+        <input type="checkbox">
+        <span class="recovery-key-text"></span>
+      </label>
       <div class="recovery-key-outer-box"></div>
     </div>
     <div id="change-password-container">
-      <div class="change-password">
+      <div class="change-password-link">
         <a href="forgotpassword.html">Change Password</a>
       </div>
       <div class="change-password-outer-box"></div>
     </div>
     <div id="about-container">
-      <div class="about">
-        <p>About</p>
+      <div class="about-link">
+        <a href="aboutpage.html">About</a>
       </div>
       <div class="about-outer-box"></div>
     </div>
