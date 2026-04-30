@@ -36,7 +36,6 @@ fileInput.addEventListener('change', (event) => {
       ctx.drawImage(img, 0, 0);
 
       try {
-        alert("got here 1");
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
         //const png = jpeg.decode(data, { useTArray: true })
@@ -87,13 +86,11 @@ fetch("../scripts/tomatomodel.json")
     const result = net.forward(vol);
     colorText.innerText = `how healthy is this plant?: ${result.w[0] * 100} %`;
     console.log("Prediction:", result.w);
-    alert("Prediction done!");
   });
 
         const rgb = `rgb(${r}, ${g}, ${b})`;
         //colorText.innerText = `Average Color: ${rgb}`;
         //colorText.innerText = `how healthy is this plant?: ${result.w[0]}`;
-        alert("got result");
         colorBox.style.backgroundColor = rgb;
 
         console.log("Average color:", rgb);
