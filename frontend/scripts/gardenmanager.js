@@ -1,5 +1,4 @@
 const addImageBtn = document.getElementById("addImageBtn");
-const newgardenBtn = document.getElementById("newgardenBtn");
 const fileInput = document.getElementById("fileInput");
 
 const leftPanel = document.getElementById("leftPanel");
@@ -11,6 +10,8 @@ let currentGarden = null;  // currently selected garden
 let gardenCount = 0;
 let selectedPlant = null;
 
+<<<<<<< HEAD
+=======
 document.addEventListener("click", (event) => {
   if (event.target.id === "backBtn") {
     window.location.href = `homepage.html`;
@@ -21,6 +22,7 @@ newgardenBtn.addEventListener("click", () => {
   alert("Gardens must be created elsewhere.");
 });
 
+>>>>>>> 7ec7b766e67a658350fc06bce50e22353bbbd8b9
 // Select garden
 function selectgarden(gardenId, element) {
   if (!gardens[gardenId]) {
