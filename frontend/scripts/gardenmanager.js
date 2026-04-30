@@ -1,5 +1,4 @@
 const addImageBtn = document.getElementById("addImageBtn");
-const newgardenBtn = document.getElementById("newgardenBtn");
 const fileInput = document.getElementById("fileInput");
 
 const leftPanel = document.getElementById("leftPanel");
@@ -10,10 +9,6 @@ let gardens = {};          // store all gardens
 let currentGarden = null;  // currently selected garden
 let gardenCount = 0;
 let selectedPlant = null;
-
-newgardenBtn.addEventListener("click", () => {
-  alert("Gardens must be created elsewhere.");
-});
 
 // Select garden
 function selectgarden(gardenId, element) {
