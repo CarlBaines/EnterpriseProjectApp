@@ -1,87 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>New Collage</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>New garden</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-    #topBar {
-      padding: 10px;
-      background: #333;
-      color: white;
-    }
+      #topBar {
+        padding: 10px;
+        background: #045004;
+        color: rgb(140, 211, 138);
+      }
 
-    #topBar button {
-      margin-right: 10px;
-    }
+      #topBar button {
+        margin-right: 10px;
+      }
 
-    #container {
-      display: flex;
-      flex: 1;
-    }
+      #container {
+        display: flex;
+        flex: 1;
+      }
 
-    #leftPanel {
-      width: 200px;
-      background: #f0f0f0;
-      border-right: 1px solid #ccc;
-      padding: 10px;
-    }
+      #leftPanel {
+        width: 200px;
+        background: #a0c292;
+        border-right: 1px solid #ccc;
+        padding: 10px;
+      }
 
-    #mainPanel {
-      flex: 1;
-      position: relative;
-      background: #fff;
-      overflow: hidden;
-    }
+      #mainPanel {
+        flex: 1;
+        position: relative;
+        background: #6fac67;
+        overflow: hidden;
+      }
 
-    #bottomPanel {
-      height: 40px;
-      background: #222;
-      color: white;
-      padding: 10px;
-      font-size: 14px;
-    }
+      #bottomPanel {
+        height: 40px;
+        background: #0a2404;
+        color: white;
+        padding: 10px;
+        font-size: 14px;
+      }
 
-    .collage-item {
-      padding: 5px;
-      cursor: pointer;
-      background: #ddd;
-      margin-bottom: 5px;
-    }
+      .garden-item {
+        padding: 5px;
+        cursor: pointer;
+        background: #639b30;
+        margin-bottom: 5px;
+      }
 
-    .collage-item.active {
-      background: #bbb;
-    }
+      .garden-item.active {
+        background: #486d37;
+      }
 
-    .draggable-img {
-      position: absolute;
-      width: 120px;
-      cursor: grab;
-    }
-  </style>
-</head>
-<body>
+      .draggable-img {
+        position: absolute;
+        width: 120px;
+        cursor: grab;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="topBar">
+      <button id="addImageBtn">Add Image</button>
+      <button onclick="window.location.href = 'homepage.html'">
+        Add a new garden
+      </button>
+      <button onclick="window.location.href = 'aidetector.html'">
+        Go to the ai scanner
+      </button>
+      <input
+        type="file"
+        id="fileInput"
+        style="display: none"
+        accept="image/*"
+      />
+    </div>
 
-  <div id="topBar">
-    <button id="addImageBtn">Add Image</button>
-    <button id="newCollageBtn">New Collage</button>
-    <input type="file" id="fileInput" style="display:none" accept="image/*">
-  </div>
+    <div id="container">
+      <div id="leftPanel"></div>
+      <div id="mainPanel"></div>
+    </div>
 
-  <div id="container">
-    <div id="leftPanel"></div>
-    <div id="mainPanel"></div>
-  </div>
+    <div id="bottomPanel">No image selected</div>
 
-  <div id="bottomPanel">No image selected</div>
-
-  <script src="../scripts/gardenmanager.js"></script>
-</body>
+    <script src="../scripts/gardenmanager.js"></script>
+  </body>
 </html>

@@ -1,50 +1,48 @@
 const addImageBtn = document.getElementById("addImageBtn");
-const newCollageBtn = document.getElementById("newCollageBtn");
+const newgardenBtn = document.getElementById("newgardenBtn");
 const fileInput = document.getElementById("fileInput");
 
 const leftPanel = document.getElementById("leftPanel");
 const mainPanel = document.getElementById("mainPanel");
 const bottomPanel = document.getElementById("bottomPanel");
 
-let collages = {};
-let currentCollage = null;
-let collageCount = 0;
+let gardens = {};          // store all gardens
+let currentGarden = null;  // currently selected garden
+let gardenCount = 0;
 let selectedPlant = null;
 
-// Create new collage
-newCollageBtn.addEventListener("click", () => {
-  collageCount++;
-  const name = `collage${collageCount}`;
-  collages[name] = [];
-
-  const div = document.createElement("div");
-  div.className = "collage-item";
-  div.innerText = name;
-
-  div.addEventListener("click", () => selectCollage(name, div));
-
-  leftPanel.appendChild(div);
-
-  selectCollage(name, div);
+document.addEventListener("click", (event) => {
+  if (event.target.id === "backBtn") {
+    window.location.href = `homepage.html`;
+  }
 });
 
-// Select collage
-function selectCollage(name, element) {
-  currentCollage = name;
+newgardenBtn.addEventListener("click", () => {
+  alert("Gardens must be created elsewhere.");
+});
 
-  document.querySelectorAll(".collage-item").forEach(el => {
+// Select garden
+function selectgarden(gardenId, element) {
+  if (!gardens[gardenId]) {
+    console.error("Garden not found in local store:", gardenId);
+    return;
+  }
+
+  currentGarden = gardens[gardenId];
+
+  document.querySelectorAll(".garden-item").forEach(el => {
     el.classList.remove("active");
   });
 
   element.classList.add("active");
 
-  renderCollage();
+  rendergarden();
 }
 
 // Open file picker
 addImageBtn.addEventListener("click", () => {
-  if (!currentCollage) {
-    alert("Create a new collage first");
+  if (!currentGarden) {
+    alert("Create a new garden first");
     return;
   }
   fileInput.click();
@@ -55,29 +53,36 @@ fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  const url = URL.createObjectURL(file);
+const reader = new FileReader();
+
+reader.onload = function (event) {
+  const base64 = event.target.result;
 
   const imgData = {
-  src: url,
-  name: file.name,
-  x: 50,
-  y: 50,
-  age: 0,          // in days
-  disease: "none", // default
-  createdAt: Date.now() // helps auto age tracking
+    src: base64, // <-- now base64 instead of blob
+    name: file.name,
+    x: 50,
+    y: 50,
+    age: 0,
+    disease: "none",
+    createdAt: Date.now()
+  };
+
+  currentGarden.plants.push(imgData);
+  rendergarden();
+  sendGardenUpdate();
 };
 
-  collages[currentCollage].push(imgData);
-  renderCollage();
+reader.readAsDataURL(file);
 });
 
 // Render images
-function renderCollage() {
+function rendergarden() {
   mainPanel.innerHTML = "";
 
-  if (!currentCollage) return;
+  if (!currentGarden || !currentGarden.plants) return;
 
-  collages[currentCollage].forEach((imgData, index) => {
+  currentGarden.plants.forEach((imgData, index) => {
     const img = document.createElement("img");
     img.src = imgData.src;
     img.className = "draggable-img";
@@ -95,8 +100,6 @@ function renderCollage() {
     mainPanel.appendChild(img);
   });
 }
-
-// NEW AI SHIT I DONT KNOW ABOUT 
 
 
 function renderBottomPanel() {
@@ -119,10 +122,12 @@ function renderBottomPanel() {
   // Hook up events
   document.getElementById("ageInput").addEventListener("input", (e) => {
     selectedPlant.age = parseInt(e.target.value) || 0;
+    sendGardenUpdate();
   });
 
   document.getElementById("diseaseSelect").addEventListener("change", (e) => {
     selectedPlant.disease = e.target.value;
+    sendGardenUpdate();
   });
 }
 
@@ -132,20 +137,15 @@ function renderBottomPanel() {
 function updatePlantAges() {
   const now = Date.now();
 
-  Object.values(collages).forEach(collage => {
-    collage.forEach(plant => {
+  if (!currentGarden) return;
+
+currentGarden.plants.forEach(plant => {
       const days = Math.floor((now - plant.createdAt) / (1000 * 60 * 60 * 24));
       plant.age = days;
     });
-  });
+  
 }
 
-
-
-
-
-
-// NEW AI SHIT I DONT KNOW ABOUT 
 
 
 
@@ -177,10 +177,124 @@ function makeDraggable(element, data) {
   });
 
   document.addEventListener("mouseup", () => {
-    isDragging = false;
-    element.style.cursor = "grab";
+  if (isDragging) {
+    sendGardenUpdate();
+  }
+  isDragging = false;
+  element.style.cursor = "grab";
+});
+}
+
+
+function buildGardenPayload(garden) {
+  return {
+    id: garden.id,
+    name: garden.name,
+    plants: garden.plants.map((plant, index) => ({
+      id: index + 1,
+      src: plant.src,
+      name: plant.name,
+      x: plant.x,
+      y: plant.y,
+      age: plant.age,
+      disease: plant.disease,
+      createdAt: plant.createdAt
+    }))
+  };
+}
+
+
+
+
+async function loadGardenFromDB(gardenId, gardenNameFromList) {
+  try {
+    const res = await fetch(`/gardens/gardeninfo/${gardenId}`);
+    const data = await res.json();
+
+    const garden = {
+  id: data.id || gardenId,
+  name: data.name || gardenNameFromList || `garden${gardenId}`,
+      plants: (data.plants || []).map(p => ({
+        src: p.src,
+        name: p.name,
+        x: p.x,
+        y: p.y,
+        age: p.age,
+        disease: p.disease,
+        createdAt: p.createdAt
+      }))
+    };
+
+    // store it
+    gardens[garden.id] = garden;
+
+    // add to UI
+    addGardenToPanel(garden);
+
+    // auto-select first garden
+    if (!currentGarden) {
+      currentGarden = garden;
+      rendergarden();
+    }
+
+  } catch (err) {
+    console.error("Failed to load garden:", err);
+  }
+}
+
+
+function sendGardenUpdate() {
+  if (!currentGarden) return;
+
+  const payload = {
+    id: currentGarden.id,
+    name: currentGarden.name,
+    plants: currentGarden.plants.map((plant, index) => ({
+      id: index + 1,
+      src: plant.src,
+      name: plant.name,
+      x: plant.x,
+      y: plant.y,
+      age: plant.age,
+      disease: plant.disease,
+      createdAt: plant.createdAt
+    }))
+  };
+
+  fetch("/gardens/manager/update/gardeninfo", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+    garden_id: currentGarden.id,
+    garden_info: JSON.stringify(payload),
+
+    // add this to satisfy backend validation
+    garden_name: currentGarden.name
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Garden updated:", data);
+  })
+  .catch(err => {
+    console.error("Error updating garden:", err);
   });
 }
+
+
+function addGardenToPanel(garden) {
+  const div = document.createElement("div");
+  div.className = "garden-item";
+  div.innerText = garden.name;
+
+  div.addEventListener("click", () => selectgarden(garden.id, div));
+
+  leftPanel.appendChild(div);
+}
+
+
 
 
 
@@ -188,3 +302,20 @@ setInterval(() => {
   updatePlantAges();
   if (selectedPlant) renderBottomPanel();
 }, 60000); // update every minute
+
+
+
+window.addEventListener("load", async () => {
+  try {
+    // Example endpoint (you will implement this)
+    const res = await fetch("/gardens/usergardens");
+    const gardenList = await res.json();
+
+for (const g of gardenList) {
+  await loadGardenFromDB(g.id, g.name);
+}
+
+  } catch (err) {
+    console.error("Failed to load gardens list:", err);
+  }
+});

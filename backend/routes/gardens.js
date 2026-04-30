@@ -79,23 +79,34 @@ router.get("/user/:username", requireLogin, (request, response) => {
   }
 });
 
-router.get("/gardeninfo/:garden_id", requireLogin, (request, response) => {
+router.get("/gardeninfo/:garden_id", (request, response) => {
+    
   const { garden_id } = request.params;
+  console.log("garden_id param:", garden_id);
   const selectGardenInfo = db.prepare(`SELECT garden_info FROM gardens WHERE garden_id = ?`);
+
   try {
     const garden = selectGardenInfo.get(garden_id);
-    if(!garden){
+    console.log("query result:", garden);
+    if (!garden) {
+        console.log("error message 2");
       return response.status(404).json({
         message: "Garden not found with the provided garden_id.",
       });
     }
-  }
-  catch(err){
-    return response.status(500).json({
-      message: "Error retrieving garden info from the database.",
-      error: err.message,
-    });
-  }
+    console.log("RAW garden_info:", garden.garden_info);
+    return response.json(
+  garden.garden_info ? JSON.parse(garden.garden_info) : {}
+    );
+
+  } catch (err) {
+  console.error("DB ERROR:", err);
+
+  return response.status(500).json({
+    message: "Error retrieving garden info from the database.",
+    error: err.message,
+  });
+}
 });
 
 router.post("/add", requireLogin, (request, response) => {
@@ -145,9 +156,13 @@ router.post("/add", requireLogin, (request, response) => {
   }
 });
 
+
+//this route handles setting up the garden 
 router.put("/update/:garden_id", requireLogin, (request, response) => {
   const { garden_id } = request.params;
   const { garden_name, image_path } = request.body;
+
+
   if (!garden_name && !image_path) {
     return response.status(400).json({
       message:
@@ -161,6 +176,7 @@ router.put("/update/:garden_id", requireLogin, (request, response) => {
   try {
     const existingGarden = gardenExistsCheck.get(garden_id);
     if (!existingGarden) {
+        console.log("error message 3");
       return response.status(404).json({
         message: "Garden not found with the provided garden_id.",
       });
@@ -213,9 +229,15 @@ router.put("/update/:garden_id", requireLogin, (request, response) => {
 });
 
 // Route that updates the garden_info field for a specific garden_id
-router.put("/update/gardeninfo", requireLogin, (request, response) => {
+// added manager to this so it doesnt conflict with the other update function 
+router.put("/manager/update/gardeninfo", requireLogin, (request, response) => {
+    console.log("got here 1");
   const { garden_id, garden_info } = request.body;
   const userId = request.session.userId;
+
+    
+
+
   if(!garden_id || !garden_info) {
     return response.status(400).json({
       success: false,
@@ -227,6 +249,7 @@ router.put("/update/gardeninfo", requireLogin, (request, response) => {
   try {
     const existingGarden = gardenExistsCheck.get(garden_id, userId);
     if(!existingGarden){
+        console.log("got here 2");
       return response.status(404).json({
         success: false,
         message: "Garden not found with the provided garden_id for the current user."
@@ -256,6 +279,41 @@ router.put("/update/gardeninfo", requireLogin, (request, response) => {
   }
 });
 
+// gets all the users gardens to display 
+router.get("/usergardens", requireLogin, (request, response) => {
+  const userId = request.session.userId;
+
+  if (!userId) {
+    return response.status(401).json({
+      message: "Unauthorised to access this resource. Please log in.",
+    });
+  }
+
+  try {
+    // Select both id and name
+    const selectGardens = db.prepare(
+      "SELECT garden_id, garden_name FROM gardens WHERE user_id = ?"
+    );
+
+    const rows = selectGardens.all(userId);
+
+    // Map into desired format
+    const gardens = rows.map(row => ({
+      id: row.garden_id,
+      name: row.name
+    }));
+
+    return response.status(200).json(gardens);
+
+  } catch (error) {
+    console.error("Error fetching user gardens:", error);
+    return response.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+
 router.delete("/delete/:garden_id", requireLogin, (request, response) => {
   const { garden_id } = request.params;
   const gardenExistsCheck = db.prepare(
@@ -264,6 +322,7 @@ router.delete("/delete/:garden_id", requireLogin, (request, response) => {
   try {
     const existingGarden = gardenExistsCheck.get(garden_id);
     if (!existingGarden) {
+        console.log("error message 4");
       return response.status(404).json({
         message: "Garden not found with the provided garden_id.",
       });
