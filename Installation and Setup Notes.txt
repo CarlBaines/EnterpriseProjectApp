@@ -1,0 +1,9 @@
+Installation and Setup
+Project Bellossom requires Node.js to be installed on your local machine to manage the environment and dependencies.
+
+Clone the repository:
+git clone [https://github.com/CarlBaines/EnterpriseProjectApp.git](https://github.com/CarlBaines/EnterpriseProjectApp.git)
+Install necessary modules: Run the following command to install all required dependencies, including better-sqlite3 for database performance, Electron for the desktop wrapper, Express for the server framework, and bcrypt for security:
+npm install
+Launch the application:
+npm start
