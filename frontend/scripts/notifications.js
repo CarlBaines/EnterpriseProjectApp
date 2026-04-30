@@ -30,7 +30,8 @@ async function displayNotifications() {
 
     // Update number of notifications
     const notifications = Array.isArray(data.notifications) ? data.notifications : [];
-    countEl.textContent = `${notifications.length} new notification(s)`;
+    const unreadCount = notifications.filter(n => !n.is_read).length;
+    countEl.textContent = `${unreadCount} new notification(s)`;
 
     // Render clone of template for each notification
     notifications.forEach((notification, index) => {
@@ -47,7 +48,7 @@ async function displayNotifications() {
         // Make checkbox id unique per clone
         const checkboxId = `notification-${index}`;
         checkbox.id = checkboxId;
-        checkbox.checked = !!notification.read;
+        checkbox.checked = !!notification.is_read;
         label.htmlFor = checkboxId;
 
         // Render content
@@ -129,6 +130,13 @@ function changePlaceholderImg(notificationTitle, imgEl) {
     }
 }
 
+async function refreshNotifications(){
+    // Remove all currently rendered notifications from the DOM
+    document.querySelectorAll('.notifications-list .garden-notifications').forEach(el => el.remove());
+    await displayNotifications();
+    updateActionsFooter();
+}
+
 // Event listeners
 if (backArrow) {
     backArrow.addEventListener('click', () => {
@@ -163,14 +171,36 @@ if (settingsIcon) {
 }
 
 if (markAsReadBtn) {
-    markAsReadBtn.addEventListener('click', () => {
-        alert("Mark as read functionality is not implemented yet.");
+    markAsReadBtn.addEventListener('click', async () => {
+        const response = await fetch('/notifications/markread', {
+            method: 'PUT',
+            credentials: 'include',
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if(!response.ok){
+            console.error(data);
+            return;
+        }
+
+        await refreshNotifications();
     });
 }
 
 if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-        alert("Clear notifications functionality is not implemented yet.");
+    clearBtn.addEventListener('click', async () => {
+        const response = await fetch('/notifications/clearall', {
+            method: 'DELETE',
+            credentials: 'include',
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if(!response.ok){
+            console.error(data);
+            return;
+        }
+
+        await refreshNotifications();
     });
 }
 

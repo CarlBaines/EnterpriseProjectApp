@@ -61,4 +61,60 @@ router.get('/all', requireLogin, (request, response) => {
     })
 });
 
+// Mark notifications as read for the user
+router.put("/markread", requireLogin, (request, response) => {
+    const userId = request.session.userId;
+
+    const userExists = db.prepare(`SELECT 1 FROM users WHERE user_id = ?`).get(userId);
+    if(!userExists){
+        return response.status(404).json({
+            message: `No user found with user_id=${userId}`
+        });
+    }
+
+    const updateNotifications = db.prepare(`UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0`)
+    
+    try{
+        const result = updateNotifications.run(userId);
+        return response.status(200).json({
+            message: "All notifications marked as read successfully",
+            updatedCount: result.changes,
+        });
+    }
+    catch(err){
+        return response.status(500).json({
+            message: "Error marking notifications as read",
+            error: err.message
+        });
+    }
+});
+
+// Claer all notifications for the user
+router.delete("/clearall", requireLogin, (request, response) => {
+    const userId = request.session.userId;
+
+    const userExists = db.prepare(`SELECT 1 FROM users WHERE user_id = ?`).get(userId);
+    if(!userExists){
+        return response.status(404).json({
+            message: `No user found with user_id=${userId}`
+        });
+    }
+
+    const deleteNotifications = db.prepare(`DELETE FROM notifications WHERE user_id = ?`);
+    try{
+        const result = deleteNotifications.run(userId);
+        return response.status(200).json({
+            message: "All notifications cleared successfully",
+            deletedCount: result.changes,
+        });
+    }
+    catch(err){
+        return response.status(500).json({
+            message: "Error clearing notifications",
+            error: err.message
+        });
+    }
+});
+
+
 module.exports = router;
