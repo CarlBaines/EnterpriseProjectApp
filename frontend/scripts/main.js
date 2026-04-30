@@ -16,8 +16,8 @@ if (!app.isPackaged) {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1360,
-    height: 800,
+    width: 600,
+    height: 1080,
     resizable: true,
     maximizable: true,
     fullscreenable: false,
