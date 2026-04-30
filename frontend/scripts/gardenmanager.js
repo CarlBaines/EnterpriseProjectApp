@@ -11,6 +11,12 @@ let currentGarden = null;  // currently selected garden
 let gardenCount = 0;
 let selectedPlant = null;
 
+document.addEventListener("click", (event) => {
+  if (event.target.id === "backBtn") {
+    window.location.href = `homepage.html`;
+  }
+});
+
 newgardenBtn.addEventListener("click", () => {
   alert("Gardens must be created elsewhere.");
 });

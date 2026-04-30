@@ -1,87 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>New garden</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>New garden</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
 
-    #topBar {
-      padding: 10px;
-      background: #045004;
-      color: rgb(140, 211, 138);
-    }
+      #topBar {
+        padding: 10px;
+        background: #045004;
+        color: rgb(140, 211, 138);
+      }
 
-    #topBar button {
-      margin-right: 10px;
-    }
+      #topBar button {
+        margin-right: 10px;
+      }
 
-    #container {
-      display: flex;
-      flex: 1;
-    }
+      #container {
+        display: flex;
+        flex: 1;
+      }
 
-    #leftPanel {
-      width: 200px;
-      background: #a0c292;
-      border-right: 1px solid #ccc;
-      padding: 10px;
-    }
+      #leftPanel {
+        width: 200px;
+        background: #a0c292;
+        border-right: 1px solid #ccc;
+        padding: 10px;
+      }
 
-    #mainPanel {
-      flex: 1;
-      position: relative;
-      background: #6fac67;
-      overflow: hidden;
-    }
+      #mainPanel {
+        flex: 1;
+        position: relative;
+        background: #6fac67;
+        overflow: hidden;
+      }
 
-    #bottomPanel {
-      height: 40px;
-      background: #0a2404;
-      color: white;
-      padding: 10px;
-      font-size: 14px;
-    }
+      #bottomPanel {
+        height: 40px;
+        background: #0a2404;
+        color: white;
+        padding: 10px;
+        font-size: 14px;
+      }
 
-    .garden-item {
-      padding: 5px;
-      cursor: pointer;
-      background: #639b30;
-      margin-bottom: 5px;
-    }
+      .garden-item {
+        padding: 5px;
+        cursor: pointer;
+        background: #639b30;
+        margin-bottom: 5px;
+      }
 
-    .garden-item.active {
-      background: #486d37;
-    }
+      .garden-item.active {
+        background: #486d37;
+      }
 
-    .draggable-img {
-      position: absolute;
-      width: 120px;
-      cursor: grab;
-    }
-  </style>
-</head>
-<body>
+      .draggable-img {
+        position: absolute;
+        width: 120px;
+        cursor: grab;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="topBar">
+      <button id="backBtn">Back</button>
+      <button id="addImageBtn">Add Image</button>
+      <button id="newgardenBtn">New garden</button>
+      <input
+        type="file"
+        id="fileInput"
+        style="display: none"
+        accept="image/*"
+      />
+    </div>
 
-  <div id="topBar">
-    <button id="addImageBtn">Add Image</button>
-    <button id="newgardenBtn">New garden</button>
-    <input type="file" id="fileInput" style="display:none" accept="image/*">
-  </div>
+    <div id="container">
+      <div id="leftPanel"></div>
+      <div id="mainPanel"></div>
+    </div>
 
-  <div id="container">
-    <div id="leftPanel"></div>
-    <div id="mainPanel"></div>
-  </div>
+    <div id="bottomPanel">No image selected</div>
 
-  <div id="bottomPanel">No image selected</div>
-
-  <script src="../scripts/gardenmanager.js"></script>
-</body>
+    <script src="../scripts/gardenmanager.js"></script>
+  </body>
 </html>
