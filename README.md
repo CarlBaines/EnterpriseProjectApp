@@ -1,7 +1,7 @@
 # Project Bellossom
 ## A Proof of Concept by Rooted Devs
 
-Project Bellossom is a gardening manager application designed with the vision of helping beginner gardeners overcome the daunting hurdles of plant care[cite: 1]. Developed as a Proof of Concept (PoC) for the Enterprise Project module, the application utilises a secure, lightweight architecture for garden management whilst actively supporting user well-being.
+Project Bellossom is a gardening manager application designed with the vision of helping beginner gardeners overcome the daunting hurdles of plant care. Developed as a Proof of Concept (PoC) for the Enterprise Project module, the application utilises a secure, lightweight architecture for garden management whilst actively supporting user well-being.
 
 ---
 
@@ -57,6 +57,6 @@ Project Bellossom requires **Node.js** to be installed on your local machine to 
 
 ## Standards and Compliance
 This project was designed and developed with a focus on professional industry standards:
-* **Data Integrity**: Input validation and unique constraints within the SQLite schema to ensure clean data entry[cite: 1].
-* **Security**: Middleware-protected routes and hashed passwords to maintain user privacy[cite: 1].
-* **Accessibility**: Intuitive navigation, adjustable text/icon sizes, and high-contrast UI themes to lower the barrier to entry for all users[cite: 1].
+* **Data Integrity**: Input validation and unique constraints within the SQLite schema to ensure clean data entry.
+* **Security**: Middleware-protected routes and hashed passwords to maintain user privacy.
+* **Accessibility**: Intuitive navigation, adjustable text/icon sizes, and high-contrast UI themes to lower the barrier to entry for all users.
